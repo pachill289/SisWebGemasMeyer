@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "webgemasmeyer",
+  "private_key_id": "2670159b89b934a1f080270aae2255292b5bb777",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCcCHud2PkEyv63\noTrLHiOonPoCWqLO6Y5vuqFTA0Z+Y6f3CJ4/vWN7z63xQ4ZL4qzZpN9ov/SpPyCi\nzTrkb2e5wsiQRAvuN6S6CIoLhcjaih6xSCi5Qxvh4Ah917OYsdB8uk/8HsrMV1hH\naFV9Ni8WQja3tt6KzInkxjUV7UyKfqunSkE8qEXVlFhfxLMYd48ie+cNsfMqD/q2\nwBpeqjKzQx+gHk8vz0iCfZozzX7DKJTCWwD3nfbKJ+AB/GqyRTaAxTdcbo2LEJIe\nIM+YDi1hUbC/3bfDZ5iPy+zpIZFmnvHDVwUTKnWJYZm/IGr+5rBBybwAGBUDXee7\nTV+ORadlAgMBAAECggEAN0qcP32tFIE4jOrB0kteWHgz8dSbX9YMptQMKcX923jG\nAviXVz/t+mhIG7gRZV+wX7mYf16SPM1Fa9ts9JjzuTRobRLn5WTrZw7ymA2y9JpA\nMRNAdxHsVfjVGX7vwfq0xhYhlNZ2h72l5zv2G1YxjmItUKGpL6c2cA66rgf2eRbH\nNPHAC6TV14v2UO1wYWO0ecf0YIXjr6GB9Qjf1vG5XXvScwS/fLF1TjgTGy24lBAq\n3vX/Rtiz6v9Rt4ibcVgVgfIJb+7sDaRZhNtlGX+oxUjK691CpL1qmlFvWUaWyyuZ\n/fij3uvWOc+7MB4zhAOloAOIxQHor/so5wI+lL9XuwKBgQDSz9MXfYpTXiPdhxPL\na1vMjj3A5dOqEoU7rXUJ+AZmBRWX9qOFSUdP+QCKGUyFmE0BW3Wtq2uA3F79RJPh\nW0tH8nRDCoUkIdch1pkvrrnf9szSMsrI7iOsCJen0Tvty0yOD5ddwU9eCpB7nCGh\nFcfg15WwxINunlkLbqei5WszvwKBgQC9erXTQj8EafAe0GHU0p1E3SKd13YXP/OJ\n1lnPI676sebTvb/VScqL0rqQXM+a9YH2Y9D1CfrzKDM954IiBMwTlTo0G1IBs/VA\niP+K0zPhPrHz0wgMHdNd2GKOEiYoZXDmdFR9/h7UFKVxfybDZ4ztFRRZRZfnvI0j\nOLidBzxd2wKBgQCnLxYTfQYkU3ZSCvvRyRSGRxAGWL3iFMoAp/E3tLEuWz3ixECu\nRYz+iVS6MJIVKNF5EBVlY5rgGORkKuy0PfiX2FoHiOJJ42R/e3cE76aNTWbmFE3p\nx6IWnsHW3wKN9TqDNy4ttk7BH9OxlAK/g0x+rboS8+Xf5khr3penghXgdQKBgBx4\nLo+yeXN5U2nd14U5rAWn0Ea1E/pEUpxYR6A29ViXmF4iOYubjcJahEuillLrJn7V\n2pSmzjzwwlo/ya7A18TtfBROMpEs7+Glc/fw6e+jEuvWvnPLm3GTTKOaGH+jVkZa\nHkPcBdfJzl3yQ+nCSktpCmirazqXewFayWpWpvxXAoGAf705Q8py8z20x+lX4LdK\nLYIxDAE10tKm1+mggzjzLk1EoYtSXPE6zQhNfyF2/YIAy3N2q03ENT/36mCSoU2W\nNof8O0JqWtgOith0lGt0QYATzcWGVVFOV71DqnJalvEr4eVjCi3EzAtOUI0An6Cw\n40uw6EsjVF+dz0Z4WZd+tQ4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "pruebaimagenes@webgemasmeyer.iam.gserviceaccount.com",
+  "client_id": "104897474318468107877",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/pruebaimagenes%40webgemasmeyer.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
