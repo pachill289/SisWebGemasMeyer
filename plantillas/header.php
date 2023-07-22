@@ -78,7 +78,7 @@
                 <?php if(isset($usuarioSesion)) {
                     if($usuarioSesion->tipo == 1 || $usuarioSesion->tipo == 2) {
                     ?>
-                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/compras/">Compras <i class="bi bi-cart4"></i></a>
+                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/pedidos/">Pedidos <i class="bi bi-handbag-fill"></i></a>
                 <?php }
                 }?>
             </li>

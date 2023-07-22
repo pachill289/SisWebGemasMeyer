@@ -2,19 +2,58 @@
 <?php
     require_once('../../data/obtenerDatos.php');
     require_once('../../models/Usuarios.php');
-     //Agregar a todos los usuarios desde la API
-     $usuarios = new Usuarios();
-     //agregar todos los usuarios al objeto Usuarios
-     foreach (construirEndpoint('Usuario', 'ObtenerUsuarios') as $usuario) {
-         $usuarios->agregarUsuario(new Usuario(
-             $usuario->ci,
-             $usuario->clave,
-             $usuario->correo,
-             $usuario->tipo,
-             $usuario->estado,
-             $usuario->nombreCompleto
-         ));
-     }
+    require_once('../../componentes/componentesHtml.php');
+    //Agregar a todos los usuarios desde la API
+    $usuarios = null;
+    function agregarUsuarios($subCat)
+    {
+        $us = new Usuarios();
+        //agregar a todos los usuarios al objeto Usuarios
+        foreach (construirEndpoint('Usuario', $subCat) as $usuario) {
+            $us->agregarUsuario(new Usuario(
+                $usuario->ci,
+                $usuario->clave,
+                $usuario->correo,
+                $usuario->tipo,
+                $usuario->estado,
+                $usuario->nombreCompleto
+            ));
+        }
+        return $us;
+    }
+    function buscarUsuarioPorNombre($subCat,$nombre)
+    {
+        $us = new Usuarios();
+        //agregar a todos los usuarios al objeto Usuarios
+        foreach (construirEndpointParametro('Usuario',$subCat,$nombre) as $usuario) {
+            $us->agregarUsuario(new Usuario(
+                $usuario->ci,
+                $usuario->clave,
+                $usuario->correo,
+                $usuario->tipo,
+                $usuario->estado,
+                $usuario->nombreCompleto
+            ));
+        }
+        return $us;
+        //echo (construirEndpointParametro('Usuario',$subCat,$nombre)->clave);
+    }
+    $subCategoria = 'ObtenerUsuarios';
+    $usuarios = agregarUsuarios($subCategoria);
+    //Opciones para buscar y
+    if (isset($_POST['botonListar'])) {
+        $subCategoria = 'ObtenerUsuarios';
+        $usuarios = agregarUsuarios($subCategoria);
+    } 
+    else if (isset($_POST['botonListar2'])) {
+        //Buscar el usuario por su nombre
+        $nombreUs = $_POST['nombreBusqueda']; 
+        $subCategoria = 'ObtenerUsuarioPorNombre';
+        if($nombreUs != "")
+        {
+            $usuarios = buscarUsuarioPorNombre($subCategoria,$nombreUs);
+        }
+    }
     //Si el usuario presiona el botón "si" en el modal para anular a un usuario...
     //Anular a un usaurio por el ci por el método PUT personalizado
     if (isset($_GET['ciAnu'])) {
@@ -48,7 +87,7 @@
 
         // Procesar la respuesta
         if ($httpCode == 200) {
-            header('Location:index.php');
+            alertAviso("Mensaje","Usuario anulado con éxito ✅","Aceptar");
         } else {
             echo 'Error en la solicitud PUT. Código de respuesta: ' . $httpCode;
         }
@@ -84,7 +123,7 @@
 
         // Procesar la respuesta
         if ($httpCode == 200) {
-            header('Location:index.php');
+            alertAviso("Mensaje","Usuario activado con éxito ✅","Aceptar");
         } else {
             echo 'Error en la solicitud PUT. Código de respuesta: ' . $httpCode;
         }
@@ -94,7 +133,34 @@
     <h4>Lista de todos los usuarios</h4>
     <div class="card">
         <div class="card-body">
-        <a name="" id="" class="btn btn-primary btn-lg" href="crear.php"   role="button">Registrar un nuevo usuario <i class="bi bi-file-earmark-person"></i></a>
+        <nav class="navbar navbar-expand navbar-light bg-light">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+            <a name="" id="" class="btn btn-primary btn-lg" href="crear.php" role="button">
+                Registrar un nuevo usuario <i class="bi bi-file-earmark-person"></i>
+            </a>
+            </li>
+            <form method="post">
+                <li class="nav-item" style="margin-left: 20px;">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Buscar usuario:</label>
+                        <input type="search" size="50"
+                            class="form-control" name="nombreBusqueda" placeholder="Ingrese el nombre del usuario">
+                    </div>
+                </li>
+                <li class="nav-item" style="margin: 10px;">
+                    <button class="btn btn-primary" type="submit" name="botonListar2">
+                    Buscar usuario <i class="bi bi-search"></i>
+                    </button>
+                </li>
+                <li class="nav-item" style="margin: 10px;">
+                    <button class="btn btn-primary" type="submit" name="botonListar">
+                    Listar usuarios <i class="bi bi-people-fill"></i>
+                    </button>
+                </li>
+            </form>
+        </ul>
+        </nav>
             <div class="table-responsive-sm">
                 <table class="table">
                     <thead>
@@ -120,13 +186,14 @@
                                     <?php echo ($usuario->tipo == 1 ? "Administrador" : ($usuario->tipo == 2 ? "Vendedor" : "Cliente"))?>
                                 </td>
                                 <td>
-                                    <?php echo ($usuario->estado == 0 ? "Inactivo" : 
-                                    ($usuario->estado == 1 ? "Activo" : "Eliminado"))?>
+                                    <?php echo ($usuario->estado == 0 ? "<div class='alert alert-secondary' role='alert'>INACTIVO</div>" : 
+                                    ($usuario->estado == 1 ? "<div class='alert alert-primary' role='alert'>ACTIVO</div>" : "Eliminado"))?>
                                 </td>
                                 <td class="text-center">
-                                    <a name="" id="" class="btn btn-success" href="editar.php?txtCi=<?php echo $usuario->ci;?>&txtNombre=<?php echo $usuario->nombreCompleto;?>&txtClave=<?php echo $usuario->clave?>&txtCorreo=<?php echo $usuario->correo?>&txtTipo=<?php echo $usuario->tipo?>"  role="button">Editar <i class="bi bi-pencil-square"></i> </a> |
+                                    <a name="" id="" class="btn btn-success" href="editar.php?txtCi=<?php echo $usuario->ci;?>&txtNombre=<?php echo $usuario->nombreCompleto;?>&txtClave=<?php echo $usuario->clave?>&txtCorreo=<?php echo $usuario->correo?>&txtTipo=<?php echo $usuario->tipo?>"  role="button">Editar <i class="bi bi-pencil-square"></i> </a> 
+                                    <?php espacio_br(2) ?>
                                     <a name="" id="" class="btn btn-danger" href="index.php?ciAnu=<?php echo $usuario->ci;?>"  role="button">Anular <i class="bi bi-arrow-down-circle"></i> </a>
-                                    <br/><br/> <a name="" id="" class="btn btn-primary" href="index.php?ciAct=<?php echo $usuario->ci;?>"  role="button">Activar <i class="bi bi-arrow-up-circle"></i> </a>
+                                    <?php espacio_br(2) ?> <a name="" id="" class="btn btn-primary" href="index.php?ciAct=<?php echo $usuario->ci;?>"  role="button">Activar <i class="bi bi-arrow-up-circle"></i> </a>
                                 </td>
                             </tr>
                         <?php }?>
@@ -135,35 +202,4 @@
             </div>
         </div>
     </div>
-    <!-- Modal Opcional -->
-    <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitleId">Anular usuario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Desea anular a este usuario?</p>
-                    <b><span id="usuarioNombre"></span></b>
-                </div>
-                <div class="modal-footer">
-                    <form method="post" action="index.php">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
-                        <button name="btnAnular" type="submit" class="btn btn-primary">Si</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Optional: Place to the bottom of scripts -->
-    <script>
-        const modal = document.getElementById('modalId');
-        modal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget; // Botón que activó el modal
-            var nombre = button.getAttribute('data-nombre'); // Obtener el atributo data-nombre
-            var usuarioNombre = document.getElementById('usuarioNombre');
-            usuarioNombre.textContent = nombre; // Establecer el nombre del usuario en el modal
-        });
-    </script>
 <?php include('../../plantillas/footer.php');?>

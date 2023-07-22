@@ -53,7 +53,7 @@
                   <label for="ci" class="form-label">Ci:</label>
                   <input type="number"
                     class="form-control" name="ci" required pattern="^[0-9]{7,10}$" maxlength="10" id="ci" aria-describedby="helpCi" placeholder="Ingrese un ci válido" onchange="validarCI(this.value)">
-                  <small id="helpCi" class="form-text">El CI debe contener al menos 7 dígitos.</small>
+                  <small id="helpCi" class="form-text">El CI debe contener al menos 7 dígitos y no más de 10.</small>
                   <br/>
                   <label for="nombreCompleto" class="form-label">Nombre completo:</label>
                   <input type="text"

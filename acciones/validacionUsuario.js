@@ -7,15 +7,21 @@ window.onload = () => {
 }
 function validarCI(value) {
   function verificarCi(ci) {
-    var regex = /^[0-9]{7,10}$/; // Expresión regular que verifica solo letras en mayúsculas y minúsculas
+    var regex = /^[0-9]{7,10}$/; // Expresión regular que verifica
     return regex.test(ci);
     }
     var targetElement = $("small").eq(0); // Acceder al primer elemento <small>
-    const texto = 'El CI debe contener al menos 7 dígitos.';
+    const texto = 'El CI debe contener al menos 7 dígitos y no debe sobrepasar los 10 dígitos.';
     if (verificarCi(value)) {
       targetElement.css("color", "green");
       targetElement.text(textoCorrecto);
-    } else {
+    }
+    else if (value == "")
+    {
+      targetElement.css("color", "#b59410");
+      targetElement.text("Campo vacío ⚠");
+    } 
+    else {
       targetElement.css("color", "red");
       targetElement.text(texto);
     }
@@ -30,7 +36,13 @@ function validarNombre(value) {
     if (verificarNombre(value)) {
       targetElement.css("color", "green");
       targetElement.text(textoCorrecto);
-    } else {
+    }
+    else if (value == "")
+    {
+      targetElement.css("color", "#b59410");
+      targetElement.text("Campo vacío ⚠");
+    }  
+    else {
       targetElement.css("color", "red");
       targetElement.text(texto);
     }
@@ -41,11 +53,17 @@ function validarClave(value) {
       return regex.test(clave);
   }
   var targetElement = $("small").eq(2); // Acceder al primer elemento <small>
-  const texto = 'La contraseña debe tener 8 caracteres y contener por lo menos un letra mayúscula,una letra minúscula, un número y un caracter especial.';
+  const texto = 'La contraseña debe tener 8 caracteres y contener por lo menos un letra mayúscula, una letra minúscula, un número y un caracter especial.';
   if (verificarClave(value)) {
     targetElement.css("color", "green");
     targetElement.text(textoCorrecto);
-  } else {
+  }
+  else if (value == "")
+  {
+    targetElement.css("color", "#b59410");
+    targetElement.text("Campo vacío ⚠");
+  } 
+  else {
     targetElement.css("color", "red");
     targetElement.text(texto);
   }
@@ -60,7 +78,13 @@ function validarCorreo(value) {
   if (verificarClave(value)) {
     targetElement.css("color", "green");
     targetElement.text(textoCorrecto);
-  } else {
+  }
+  else if (value == "")
+  {
+    targetElement.css("color", "#b59410");
+    targetElement.text("Campo vacío ⚠");
+  }  
+  else {
     targetElement.css("color", "red");
     targetElement.text(texto);
   }
