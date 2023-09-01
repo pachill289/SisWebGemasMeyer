@@ -176,7 +176,10 @@
                     </thead>
                     <tbody>
                         <!-- Obtener a todos los usuarios mediante el objeto $usuarios -->
-                        <?php foreach ($usuarios->usuarios as $usuario) { ?>
+                        <?php
+                        if(count($usuarios->usuarios)>0)
+                        {
+                        foreach ($usuarios->usuarios as $usuario) { ?>
                             <tr class="">
                                 <td scope="row"><?php echo $usuario->ci?></td>
                                 <td><?php echo $usuario->nombreCompleto?></td>
@@ -196,7 +199,14 @@
                                     <?php espacio_br(2) ?> <a name="" id="" class="btn btn-primary" href="index.php?ciAct=<?php echo $usuario->ci;?>"  role="button">Activar <i class="bi bi-arrow-up-circle"></i> </a>
                                 </td>
                             </tr>
-                        <?php }?>
+                        <?php }
+                        }
+                        else
+                        {
+                            echo "<tr>
+                            <div class='alert alert-danger' role='alert'>La búsqueda no coincide con ningún usuario</div>
+                            </tr>";
+                        }?>
                     </tbody>
                 </table>
             </div>

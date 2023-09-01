@@ -29,7 +29,7 @@ session_start();
         {
             if($usuario->estado == 1)
             {
-                setcookie("usuario", json_encode($usuario), time() + 3600, "/");
+                setcookie("usuario", json_encode($usuario), time() + 86400, "/");
                 //Inicializar el cookie de carrito para almacenar de manera temporal
                 //Las compras que desea realizar un cliente
                 if($usuario->tipo == 3)

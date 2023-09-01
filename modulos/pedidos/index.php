@@ -202,12 +202,18 @@
                             "<div class='alert alert-warning' role='alert'>PENDIENTE</div>": 
                             "<div class='alert alert-secondary' role='alert'>ANULADO</div>"))) ?></td>
                             <td class="text-center">
-                                <?php if($pedido->estado != 1) { ?>
+                                <?php
+                                foreach ($productos->productos as $producto) {
+                                if($producto->id == $pedido->idProducto)
+                                { 
+                                if($pedido->estado != 1 && $producto->cantidad != 0) { ?>
                                 <a class="btn btn-primary" href="index.php?idPedido=<?php echo $pedido->idPedido;?>&idProducto=<?php echo $pedido->idProducto;?>&cantidadPedido=<?php echo $pedido->cantidadProducto;?>">
                                 Concretar pedido <i class="bi bi-bag-check-fill"></i>
                                 </a>
                                 <hr/>
-                                <?php }?>
+                                <?php }
+                                }
+                                }?>
                                 <a name="" id="" class="btn btn-danger" href="index.php?idAnular=<?php echo $pedido->idPedido;?>" role="button">Anular pedido <i class="bi bi-arrow-down-circle"></i></a>
                             </td>
                         </tr>

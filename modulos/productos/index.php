@@ -47,22 +47,44 @@
     $subCategoria = 'ObtenerProductos';
     if (isset($_POST['botonListar'])) {
         $subCategoria = 'ObtenerProductos';
-    } else if (isset($_POST['botonListar2'])) {
+    } 
+    else if (isset($_POST['botonListar2'])) {
         $subCategoria = 'ObtenerProductosEnStock';
     }
     //Agregar a todos los productos desde la API
     $productos = new Productos();
-    //agregar todos los productos al objeto Productos (arreglo de productos)
-    foreach (construirEndpoint('Producto', $subCategoria) as $producto) {
-        $productos->agregarProducto(new Producto(
-            $producto->idProducto,
-            $producto->nombre,
-            $producto->precio,
-            $producto->cantidad,
-            $producto->estado,
-            $producto->imagen
-        ));
+
+    if (isset($_POST['botonListar3'])) {
+        $subCategoria = 'ObtenerProducto';
+        $nombreBusqueda = $_POST['nombreBusqueda'];
+        //agregar todos los productos al objeto Productos (arreglo de productos)
+        /*foreach (construirEndpointParametro('Producto', $subCategoria,$nombreBusqueda) as $producto) {
+            $productos->agregarProducto(new Producto(
+                $producto->idProducto,
+                $producto->nombre,
+                $producto->precio,
+                $producto->cantidad,
+                $producto->estado,
+                $producto->imagen
+            ));
+        }*/
+       var_dump(construirEndpointParametro('Producto', $subCategoria,$nombreBusqueda));
     }
+    else
+    {
+        //agregar todos los productos al objeto Productos (arreglo de productos)
+        foreach (construirEndpoint('Producto', $subCategoria) as $producto) {
+            $productos->agregarProducto(new Producto(
+                $producto->idProducto,
+                $producto->nombre,
+                $producto->precio,
+                $producto->cantidad,
+                $producto->estado,
+                $producto->imagen
+            ));
+        }
+    }
+    
     //opciones para listar
 
 ?>
@@ -73,13 +95,33 @@
         <div class="card-body">
             <div class="table-responsive-sm">
                 <table class="table">
-                <a name="" id="" class="btn btn-primary" style="margin: 5px;" href="crear.php"   role="button">Registrar nuevo producto <i class="bi bi-gem"></i></a>
-                <!-- Opciones para listar -->
-                <form method="post" action="index.php">
-                        <button class="btn btn-primary" style="margin: 5px;" type="submit" name="botonListar" value="1">Listar productos</button>
-
-                        <button class="btn btn-primary" style="margin: 5px;" type="submit" name="botonListar2" value="2">Listar productos en stock</button>
-                </form>
+                <nav class="navbar navbar-expand navbar-light bg-light">
+                    <ul class="nav navbar-nav">
+                    <li class="nav-item">
+                    <a name="" id="" class="btn btn-primary" style="margin: 5px;" href="crear.php"    role="button">Registrar nuevo producto <i class="bi bi-gem"></i></a>
+                    </li>
+                    <!-- Opciones para listar -->
+                    
+                    <form method="post" action="index.php">
+                            <button class="btn btn-primary" style="margin: 5px;" type="submit"  name="botonListar" value="1">
+                            Listar productos
+                            </button>
+                            <button class="btn btn-primary" style="margin: 5px;" type="submit"  name="botonListar2" value="2">
+                            Listar productos en stock
+                            </button>
+                            <div class="mb-3" style="display: flex; height:45px; margin: 5px;">
+                                <label style="width: 230px;" for="" class="form-label">
+                                <b>Buscar producto:</b></label>
+                                <input type="search" autocomplete="off" size="50" title="(también puede filtrar productos por  palabras clave escribiendo: collares,anillos, etc..)"
+                                class="form-control" name="nombreBusqueda" placeholder="Ingrese el nombre del producto">
+                                <button style="width: 300px; margin-left: 15px;" class="btn btn-primary" type="submit" name="botonListar3">
+                                    Buscar producto <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                    </form>
+                    
+                    </ul>
+                </nav>
                     <thead>
                         <tr>
                             <th scope="col">id</th>

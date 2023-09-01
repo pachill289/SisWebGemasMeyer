@@ -20,4 +20,3 @@ function mostrarClave (input)
         $("#iconoClave").show();
     } 
 }
-//funcionalidad botón carrito de compras

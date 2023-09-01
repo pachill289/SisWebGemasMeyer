@@ -1,4 +1,7 @@
 <?php
+/**
+* Esta función obtiene endpoints desde una url de una API de tipo http
+*/
 function construirEndpoint($categoria, $subcategoria) {
     $baseURL = 'http://apijoyeriav2.somee.com';
     $endpoint = '/api/';

@@ -5,7 +5,8 @@
     require_once('models/Productos.php');
     require_once('models/ComprasCarrito.php');
     session_start();
-    
+    //recuperar la sesión del usuario si este ha iniciado sesión
+   
     //Agregar el modelo para almacenar las compras de un usuario
     //Verificar si el usuario ha iniciado sesión
     //Agregar a todos los productos con stock desde la API
@@ -74,6 +75,22 @@
 
 <?php include('plantillas/header.php');?>
 <br />
+<!-- Tarea 1 hecha -->
+<div class="row">
+<?php foreach ($productos->productos as $producto) {?>
+  <div class="col-4">
+    <div class="card">
+      <div class="card-body">
+        <img style="width:300px;" src=<?php echo $producto->imagen?>>
+        <h3 class="card-title"><?php echo $producto->nombre ?></h3>
+        <h4 class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
+        <h4 class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
+      </div>
+    </div>
+  </div>
+  <?php } ?>
+</div>
+
 <div class="p-5 mb-4 bg-light rounded-3">
     <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">Bienvenido a la página oficial gemas meyer Bolivia.</h1>
@@ -84,7 +101,7 @@
         <br><br>
         <a class="btn btn-primary btn-lg" href="https://www.labolivianitameyergems.com/nosotros" target="_blank">About us</a>
     </div>
-    <h4>Productos disponibles para comprar:</h4>
+    <h4>Productos disponibles para pedir:</h4>
     <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
         <ol class="carousel-indicators">
         <!-- Asignar índices para cada imagen -->
@@ -111,7 +128,7 @@
                 <br><b>Precio:</b> Bs. <?php echo $producto->precio?>
                 <br><b>Actualmente quedan:</b> <?php echo $producto->cantidad?> ejemplares</p>
                 <form method="post">
-                    <?php if(isset($_COOKIE['usuario'])) { ?>
+                    <?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
                     <input name="habilitadoCompra" type="number" hidden value="1">
                     <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
                     <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
@@ -122,7 +139,7 @@
                     </button>
                     <?php 
                     }
-                    else {  ?>
+                    else if(isset($usuarioSesion) && $usuarioSesion->tipo != 3) {  ?>
                     <input name="inhabilitadoCompra" type="number" hidden value="1">
                     <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Primero inicia sesión con tu cuenta.">Añadir al carrito</button>
                     <?php }?>
@@ -145,7 +162,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                     <div class="modal-header">
-                            <h5 class="modal-title" id="modalTitleId">Carrito de compras <i class="bi bi-cart"></i></h5>
+                            <h5 class="modal-title" id="modalTitleId">Carrito de pedidos <i class="bi bi-cart"></i></h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                 <div style="overflow-y: auto;  max-height: 500px;" class="modal-body">
@@ -186,7 +203,7 @@
                     <a name="" id="" class="btn btn-danger" href="borrar_carrito.php" role="button">Vaciar carrito <i class="bi bi-trash"></i></a>
                     <form method="post">
                         <button name="btnCompra" type="submit" class="btn btn-primary">
-                            Realizar compra <i class="bi bi-cart-check-fill"></i>
+                            Realizar pedido <i class="bi bi-cart-check-fill"></i>
                         </button>
                     </form>
                 </div>
