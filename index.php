@@ -16,16 +16,7 @@
     }
     $productos = new Productos();
     //agregar todos los productos al objeto Productos (arreglo de productos)
-    foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
-        $productos->agregarProducto(new Producto(
-            $producto->idProducto,
-            $producto->nombre,
-            $producto->precio,
-            $producto->cantidad,
-            $producto->estado,
-            $producto->imagen
-        ));
-    }
+    
     //Validación compra
     if($_POST)
     {
@@ -70,21 +61,128 @@
             setcookie("compraPaypal", json_encode($productosCarrito), time() + 3600, "/");
             header('Location:pago_paypal.php');
         }
+        //filtrado
+        if(isset($_POST['precioMin']) && isset($_POST['precioMax']))
+        {
+            //echo "precio mínimo: ".$_POST['precioMin']."precio máximo: ".$_POST['precioMax'];
+            foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+                if($producto->precio >= $_POST['precioMin'] && $producto->precio <= $_POST['precioMax'])
+                $productos->agregarProducto(new Producto(
+                    $producto->idProducto,
+                    $producto->nombre,
+                    $producto->precio,
+                    $producto->cantidad,
+                    $producto->estado,
+                    $producto->imagen
+                ));
+            }
+        }
+        else
+        {
+            foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+                $productos->agregarProducto(new Producto(
+                    $producto->idProducto,
+                    $producto->nombre,
+                    $producto->precio,
+                    $producto->cantidad,
+                    $producto->estado,
+                    $producto->imagen
+                ));
+            }
+        }
     }
 ?>
 
 <?php include('plantillas/header.php');?>
 <br />
+<!-- Tarea 2 barra lateral -->
+<aside style="float: left;margin-left:-100px;margin-right:10px;" class="col-sm-auto bg-light sticky-top">
+<div class="container-fluid">
+    <div class="row">
+            <div class="d-flex flex-sm-column flex-row flex-nowrap bg-light align-items-center sticky-top">
+                <h2>Buscar joyas</h2>
+                <?php espacio_br(1) ?>
+                <h2>Filtrar por precio</h2>
+                <?php espacio_br(1) ?>
+                <!-- En esta parte se define un formulario para registrar los valores mínimos
+                y máximos, además se actualiza mediante el evento onchange cada valor. nota:
+                los valores que se obtienen no son dinámicos es decir que son valores aproximados, en el campo value se actualiza de acuerdo a la última selección que hizo el usuario -->
+                <div class="range text-center">
+                    <form method="post">
+                    <input name="sliderPrecios" onchange="valorRange(this.value)" type="range" min="304" max="14000" step="10" value=
+                    <?php echo (isset($_POST['precioMin'])? $_POST['precioMin'] : "304") ?> class="form-range" id="customRange1" style="width: 200px;" />
+                    <div class="mb-3"><label for="" class="form-label">Precio mínimo</label>
+                      <input name="precioMin" type="number" onchange="valorInput(this.value)" value=<?php echo (isset($_POST['precioMin'])? $_POST['precioMin'] : "304")?> min="304"
+                      max="14000"
+                        class="form-control" id="inputPrecioMin" aria-describedby="helpId" placeholder="">
+                    </div>
+                    <input name="sliderPrecios2" onchange="valorRange2(this.value)" type="range" min="577" max="14000" value=<?php echo (isset($_POST['precioMax'])? $_POST['precioMax'] : "14000")?> class="form-range" id="customRange2" style="width: 200px;" />
+                    <div class="mb-3"><label for="" class="form-label">Precio máximo</label>
+                      <input name="precioMax" type="number" onchange="valorInput2(this.value)" max="14000" min="577" value=<?php echo (isset($_POST['precioMax'])? $_POST['precioMax'] : "14000")?>
+                        class="form-control" id="inputPrecioMax" aria-describedby="helpId" placeholder="">
+                    </div>
+                    <?php espacio_br(1) ?>
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    </form>
+                </div>
+                <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
+                            <i class="bi-house fs-1"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Dashboard">
+                            <i class="bi-speedometer2 fs-1"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Orders">
+                            <i class="bi-table fs-1"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
+                            <i class="bi-heart fs-1"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
+                            <i class="bi-people fs-1"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi-person-circle h2"></i>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                    </ul>
+                </div>
+            </div>
+        <div class="col-sm p-3 min-vh-100">
+            <!-- content -->
+        </div>
+    </div>
+</div>
+</aside>
 <!-- Tarea 1 hecha -->
 <div class="row">
 <?php foreach ($productos->productos as $producto) {?>
   <div class="col-4">
     <div class="card">
       <div class="card-body">
-        <img style="width:300px;" src=<?php echo $producto->imagen?>>
-        <h3 class="card-title"><?php echo $producto->nombre ?></h3>
-        <h4 class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
-        <h4 class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
+        <img style="width:250px;" src=<?php echo $producto->imagen?>>
+        <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
+        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
+        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
+        <hr>
+        <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+            Pedir <i class="bi bi-send"></i>
+        </button>
       </div>
     </div>
   </div>

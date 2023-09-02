@@ -32,6 +32,10 @@
             font-family: 'TipografiaElegante';
             src: url('resources/fuentes/DancingScript-VariableFont_wght.ttf') format('truetype');
         }
+        @font-face {
+            font-family: 'TipografiaElegante-bold';
+            src: url('resources/fuentes/DancingScript-Bold.ttf') format('truetype');
+        }
     </style>
 </head>
 <?php if(isset($usuarioSesion)) {

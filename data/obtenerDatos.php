@@ -21,7 +21,7 @@ function construirEndpoint($categoria, $subcategoria) {
 
     $context = stream_context_create($opciones);
     $respuesta = file_get_contents($url, false, $context);
-
+    
     if ($respuesta === false) {
         // Error al realizar la solicitud
         echo "Error al realizar la solicitud a la API. con $categoria como categoría principal  y $subcategoria como la subcategoría";
