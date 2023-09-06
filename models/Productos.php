@@ -5,16 +5,18 @@
         public $descripcion;
         public $precio;
         public $cantidad;
+        public $categoria;
         public $imagen;
         public $estado;
 
-        public function __construct($id,$nombre,$precio,$cantidad,$estado,$imagen)
+        public function __construct($id,$nombre,$precio,$cantidad,$estado,$imagen,$categoria)
         {
             $this->id = $id;
             $this->nombre = $nombre;
             $this->descripcion = null;
             $this->precio = $precio;
             $this->cantidad = $cantidad;
+            $this->categoria = $categoria;
             $this->imagen = $imagen;
             $this->estado = $estado;
         }

@@ -1,44 +1,111 @@
-<?php
-    require('componentes/componentesHtml.php');
-    //obtener los prodcutos en stock
-    require_once('data/obtenerDatos.php');
-    require_once('models/Productos.php');
-    require_once('models/ComprasCarrito.php');
-    session_start();
-    //recuperar la sesión del usuario si este ha iniciado sesión
-   
-    //Agregar el modelo para almacenar las compras de un usuario
-    //Verificar si el usuario ha iniciado sesión
-    //Agregar a todos los productos con stock desde la API
-    if(isset($_SESSION['comprasCarrito']))
-    {
-        $productosCarrito = $_SESSION['comprasCarrito'];
+<!-- Estilos slider -->
+<style>
+    .containerSli input[type="number"] {
+        width: 55px;
+        /* Reducido el ancho */
+        height: 20px;
+        /* Reducido la altura */
+        background: #fff;
+        border: 1px solid #ddd;
+        font-size: 10px;
+        /* Reducido el tamaño de fuente */
+        font-weight: 600;
+        text-align: center;
+        border-radius: 5px;
     }
-    $productos = new Productos();
-    //agregar todos los productos al objeto Productos (arreglo de productos)
-    
-    //Validación compra
-    if($_POST)
-    {
-        if(isset($_POST['habilitadoCompra'])) {
-            if($_POST['habilitadoCompra'] == 1)
-            {
+
+    .containerSli .range-slider {
+        position: relative;
+        width: 250px;
+        /* Reducido el ancho */
+        height: 3px;
+        /* Reducido la altura */
+        background: #ddd;
+        outline: none;
+        top: 1px;
+        margin: 5px;
+        /* Reducido el margen */
+    }
+
+    .containerSli .range-slider .progress {
+        left: auto;
+        right: auto;
+        height: 100%;
+        background-image: linear-gradient(10deg, #cb00a0, #d72fb1, #e248c3, #ed5dd4, #f871e6);
+        border-radius: 50px;
+        position: absolute;
+    }
+
+    .containerSli .range-slider input[type="range"] {
+        position: absolute;
+        top: -8px;
+        left: -2px;
+        width: 101%;
+        -webkit-appearance: none;
+        pointer-events: none;
+        background: none;
+        outline: none;
+    }
+
+    .containerSli .range-slider input::-webkit-slider-thumb {
+        pointer-events: auto;
+        -webkit-appearance: none;
+        width: 20px;
+        /* Reducido el ancho */
+        height: 20px;
+        /* Reducido la altura */
+        background: #CB00A0;
+        border-radius: 50px;
+    }
+
+    /* Oculta las flechas de incremento y decremento en los inputs de tipo number */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+</style>
+
+<?php
+
+require('componentes/componentesHtml.php');
+//obtener los prodcutos en stock
+require_once('data/obtenerDatos.php');
+require_once('models/Productos.php');
+require_once('models/ComprasCarrito.php');
+session_start();
+//recuperar la sesión del usuario si este ha iniciado sesión
+
+//Agregar el modelo para almacenar las compras de un usuario
+//Verificar si el usuario ha iniciado sesión
+//Agregar a todos los productos con stock desde la API
+if (isset($_SESSION['comprasCarrito'])) {
+    $productosCarrito = $_SESSION['comprasCarrito'];
+}
+$productos = new Productos();
+//agregar todos los productos al objeto Productos (arreglo de productos)
+
+//Validación compra
+if ($_POST) {
+    if (isset($_POST['habilitadoCompra'])) {
+        if ($_POST['habilitadoCompra'] == 1) {
             // Método para agregar productos al carrito
             $productoExistente = false;
             if (count($productosCarrito->compras) > 0) {
                 // Verificar si el producto ya existe en el carrito
                 foreach ($productosCarrito->compras as $compra) {
                     if ($compra->nombreProducto == $_POST['nombreProducto']) {
-                        if($compra->cantidad<$compra->stock)
+                        if ($compra->cantidad < $compra->stock)
                             $compra->cantidad++;
                         $productoExistente = true;
                         break;
                     }
                 }
             }
-            //enviar al carrito de compras
+            //enviar al carrito de pedidos
             if (!$productoExistente) {
-                // Agregar nueva compra al carrito
+                // Agregar nuevo pedido al carrito
                 $productosCarrito->agregarCompraCarrito(new CompraCarrito(
                     $_POST['ciUsuarioCompra'],
                     $_POST['nombreProducto'],
@@ -47,225 +114,253 @@
                     $_POST['stock']
                 ));
             }
-            } 
         }
-        else if(isset($_POST['inhabilitadoCompra']))
-        {
-            if($_POST['inhabilitadoCompra'] == 1 )
-            {
-                $_POST['inhabilitadoCompra'] = 0;
-                alertOp('Mensaje','Primero debe iniciar sesión.','Aceptar');
-            }
-        }
-        if(isset($_POST['btnCompra'])){
-            setcookie("compraPaypal", json_encode($productosCarrito), time() + 3600, "/");
-            header('Location:pago_paypal.php');
-        }
-        //filtrado
-        if(isset($_POST['precioMin']) && isset($_POST['precioMax']))
-        {
-            //echo "precio mínimo: ".$_POST['precioMin']."precio máximo: ".$_POST['precioMax'];
-            foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
-                if($producto->precio >= $_POST['precioMin'] && $producto->precio <= $_POST['precioMax'])
-                $productos->agregarProducto(new Producto(
-                    $producto->idProducto,
-                    $producto->nombre,
-                    $producto->precio,
-                    $producto->cantidad,
-                    $producto->estado,
-                    $producto->imagen
-                ));
-            }
-        }
-        else
-        {
-            foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
-                $productos->agregarProducto(new Producto(
-                    $producto->idProducto,
-                    $producto->nombre,
-                    $producto->precio,
-                    $producto->cantidad,
-                    $producto->estado,
-                    $producto->imagen
-                ));
-            }
+    } else if (isset($_POST['inhabilitadoCompra'])) {
+        if ($_POST['inhabilitadoCompra'] == 1) {
+            $_POST['inhabilitadoCompra'] = 0;
+            alertAviso('Mensaje', 'Primero debe iniciar sesión.', 'Aceptar');
         }
     }
+    if (isset($_POST['btnCompra'])) {
+        setcookie("compraPaypal", json_encode($productosCarrito), time() + 3600, "/");
+        header('Location:pago_paypal.php');
+    }
+    //filtrado
+    if (isset($_POST['precioMin']) && isset($_POST['precioMax'])) {
+        //echo "precio mínimo: ".$_POST['precioMin']."precio máximo: ".$_POST['precioMax'];
+        foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+            if ($producto->precio >= $_POST['precioMin'] && $producto->precio <= $_POST['precioMax'])
+                $productos->agregarProducto(new Producto(
+                    $producto->idProducto,
+                    $producto->nombre,
+                    $producto->precio,
+                    $producto->cantidad,
+                    $producto->estado,
+                    $producto->imagen,
+                    $producto->categoria
+                ));
+        }
+        if(count($productos->productos) == 0){
+            alertAviso("Mensaje ⚠","Lo sentimos no pudimos encontrar ningún producto que este en ese rango de precios, por favor vuelva a filtrar por el precio","Aceptar");
+        }
+    }
+    //filtrado por categorías
+    else if (isset($_POST['cat'])){
+        foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+            if ($producto->categoria == $_POST['cat'])
+                $productos->agregarProducto(new Producto(
+                    $producto->idProducto,
+                    $producto->nombre,
+                    $producto->precio,
+                    $producto->cantidad,
+                    $producto->estado,
+                    $producto->imagen,
+                    $producto->categoria
+                ));
+        }
+        if(count($productos->productos) == 0){
+            alertAviso("Mensaje ⚠","Lo sentimos no pudimos encontrar ningún producto con esa categoría en este momento.","Aceptar");
+        }
+    }
+}
+else
+{
+    foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+        $productos->agregarProducto(new Producto(
+            $producto->idProducto,
+            $producto->nombre,
+            $producto->precio,
+            $producto->cantidad,
+            $producto->estado,
+            $producto->imagen,
+            $producto->categoria
+        ));
+    }
+}
 ?>
 
-<?php include('plantillas/header.php');?>
+<?php include('plantillas/header.php'); ?>
+
 <br />
 <!-- Tarea 2 barra lateral -->
 <aside style="float: left;margin-left:-100px;margin-right:10px;" class="col-sm-auto bg-light sticky-top">
-<div class="container-fluid">
-    <div class="row">
+    <div class="container-fluid">
+        <div class="row">
             <div class="d-flex flex-sm-column flex-row flex-nowrap bg-light align-items-center sticky-top">
                 <h2>Buscar joyas</h2>
                 <?php espacio_br(1) ?>
-                <h2>Filtrar por precio</h2>
+                <h4>Filtrar por precio en Bs.</h4>
                 <?php espacio_br(1) ?>
+
+
                 <!-- En esta parte se define un formulario para registrar los valores mínimos
                 y máximos, además se actualiza mediante el evento onchange cada valor. nota:
                 los valores que se obtienen no son dinámicos es decir que son valores aproximados, en el campo value se actualiza de acuerdo a la última selección que hizo el usuario -->
+
+
                 <div class="range text-center">
                     <form method="post">
-                    <input name="sliderPrecios" onchange="valorRange(this.value)" type="range" min="304" max="14000" step="10" value=
-                    <?php echo (isset($_POST['precioMin'])? $_POST['precioMin'] : "304") ?> class="form-range" id="customRange1" style="width: 200px;" />
-                    <div class="mb-3"><label for="" class="form-label">Precio mínimo</label>
-                      <input name="precioMin" type="number" onchange="valorInput(this.value)" value=<?php echo (isset($_POST['precioMin'])? $_POST['precioMin'] : "304")?> min="304"
-                      max="14000"
-                        class="form-control" id="inputPrecioMin" aria-describedby="helpId" placeholder="">
-                    </div>
-                    <input name="sliderPrecios2" onchange="valorRange2(this.value)" type="range" min="577" max="14000" value=<?php echo (isset($_POST['precioMax'])? $_POST['precioMax'] : "14000")?> class="form-range" id="customRange2" style="width: 200px;" />
-                    <div class="mb-3"><label for="" class="form-label">Precio máximo</label>
-                      <input name="precioMax" type="number" onchange="valorInput2(this.value)" max="14000" min="577" value=<?php echo (isset($_POST['precioMax'])? $_POST['precioMax'] : "14000")?>
-                        class="form-control" id="inputPrecioMax" aria-describedby="helpId" placeholder="">
-                    </div>
-                    <?php espacio_br(1) ?>
-                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <div class="containerSli">
+                            <div class="min-value numberVal" style="display: inline-flex; margin-right: 25px; margin-left: 5px;">
+                                <label>Mínimo </label>
+                                <input name="precioMin" type="number" onchange="valorInput(this.value)" value=<?php echo (isset($_POST['precioMin']) ? $_POST['precioMin'] : "304") ?> min="304" max="14000" id="inputPrecioMin" aria-describedby="helpId" style="text-align: center;font-size:medium;">
+                            </div>
+                            <div class="max-value numberVal" style="text-align: right; display: inline-flex;">
+                                <label for="">Máximo </label>
+                                <input name="precioMax" type="number" onchange="valorInput2(this.value)" max="14000" min="577" value=<?php echo (isset($_POST['precioMax']) ? $_POST['precioMax'] : "14000") ?> id="inputPrecioMax" aria-describedby="helpId" style="text-align: center;font-size:10px;font-size:medium;">
+                            </div>
+                            <br>
+                            &nbsp;
+                            <div class="range-slider">
+                                <div class="progress"></div>
+                                <input name="sliderPrecios" onchange="valorRange(this.value)" type="range" min="304" max="14000" step="10" value=<?php echo (isset($_POST['precioMin']) ? $_POST['precioMin'] : "304") ?> class="range-min" id="customRange1" />
+
+                                <input name="sliderPrecios2" onchange="valorRange2(this.value)" type="range" min="577" max="14000" value=<?php echo (isset($_POST['precioMax']) ? $_POST['precioMax'] : "14000") ?> class="range-max" id="customRange2" />
+                            </div>
+                        </div>
+                        <?php espacio_br(1) ?>
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <script>
+                            const range = document.querySelectorAll('.range-slider input');
+                            const progress = document.querySelector('.range-slider .progress');
+                            let gap = 1000;
+                            const inputValue = document.querySelectorAll('.numberVal input');
+
+                            range.forEach(input => {
+                                input.addEventListener('input', e => {
+                                    let minrange = parseInt(range[0].value),
+                                        maxrange = parseInt(range[1].value);
+
+                                    if (maxrange - minrange < gap) {
+                                        if (e.target.className === "range-min") {
+                                            range[0].value = maxrange - gap;
+                                            minrange = maxrange - gap; // Actualiza minrange cuando ajustas maxrange
+                                        } else {
+                                            range[1].value = minrange + gap;
+                                            maxrange = minrange + gap; // Actualiza maxrange cuando ajustas minrange
+                                        }
+                                    } else {
+                                        progress.style.left = (minrange / range[0].max) * 100 + '%';
+                                        progress.style.right = 100 - (maxrange / range[1].max) * 100 + '%';
+                                    }
+
+                                    inputValue[0].value = minrange;
+                                    inputValue[1].value = maxrange;
+                                });
+                            });
+                        </script>
+
+
                     </form>
                 </div>
-                <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
+                <h4>Categorías:</h4>
+                
+                <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-left">
                     <li class="nav-item">
-                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-                            <i class="bi-house fs-1"></i>
-                        </a>
+                    <form method="post">
+                    <input name="cat" type="text" hidden value="Anillo">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                    <i class="bi bi-gem"></i> Anillos
+                    </button>
+                    </form>
+                    </li>
+                    <?php espacio_br(1) ?>
+                    <li>
+                    <form method="post">
+                    <input name="cat" type="text" hidden value="Cadena">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                    <i class="bi bi-gem"></i> Cadenas
+                    </button>
+                    </form>
+                    </li>
+                    <?php espacio_br(1) ?>
+                    <li>
+                    <form method="post">
+                    <input name="cat" type="text" hidden value="Collar">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                    <i class="bi bi-gem"></i> Collares
+                    </button>
+                    </form>
+                    </li>
+                    <?php espacio_br(1) ?>
+                    <li>
+                    <form method="post">
+                    <input name="cat" type="text" hidden value="Juego">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                    <i class="bi bi-gem"></i> Juegos
+                    </button>
+                    </form>
+                    </li>
+                    <?php espacio_br(1) ?>
+                    <li>
+                    <form method="post">
+                    <input name="cat" type="text" hidden value="Dije">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                    <i class="bi bi-gem"></i> Dijes
+                    </button>
+                    </form>
                     </li>
                     <li>
-                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Dashboard">
-                            <i class="bi-speedometer2 fs-1"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Orders">
-                            <i class="bi-table fs-1"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Products">
-                            <i class="bi-heart fs-1"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link py-3 px-2" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
-                            <i class="bi-people fs-1"></i>
+                        <a href="#" class="nav-link py-3 px-2" title="Ir arriba" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Customers">
+                            <i class="bi-arrow-bar-up fs-1"></i>
                         </a>
                     </li>
                 </ul>
-                <div class="dropdown">
-                    <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi-person-circle h2"></i>
-                    </a>
-                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                    </ul>
-                </div>
+                </form>
             </div>
-        <div class="col-sm p-3 min-vh-100">
-            <!-- content -->
+            <div class="col-sm p-3 min-vh-100">
+                <!-- content -->
+            </div>
         </div>
     </div>
-</div>
 </aside>
 <!-- Tarea 1 hecha -->
 <div class="row">
-<?php foreach ($productos->productos as $producto) {?>
-  <div class="col-4">
-    <div class="card">
-      <div class="card-body">
-        <img style="width:250px;" src=<?php echo $producto->imagen?>>
-        <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
-        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
-        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
-        <hr>
-        <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
-            Pedir <i class="bi bi-send"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-  <?php } ?>
-</div>
-
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Bienvenido a la página oficial gemas meyer Bolivia.</h1>
-        <h4>Misión</h4>
-        <p class="col-md-8 fs-4">Brindar a los clientes la alternativa de adquirir joyas al "precio justo", piedras preciosas naturales talladas en Bolivia, engarzadas en metales nobles de origen boliviano, labrados por artesanos orfebres locales, brindando empleos y generando impacto social, y a su vez logrando que llege sus manos una pieza de joyería de alta calidad.</p>
-        <p class="col-md-8 fs-4"><b>Conoce mas de nosotros</b></p>
-        <img width="450" height="350" src="resources/img_demostracion_2.jpg">
-        <br><br>
-        <a class="btn btn-primary btn-lg" href="https://www.labolivianitameyergems.com/nosotros" target="_blank">About us</a>
-    </div>
-    <h4>Productos disponibles para pedir:</h4>
-    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-        <ol class="carousel-indicators">
-        <!-- Asignar índices para cada imagen -->
-            <?php $i=0; foreach ($productos->productos as $producto) { ?>
-            <li data-bs-target="#carouselId" data-bs-slide-to="<?php echo $i?>" class="<?php 
-            if($i == 0){
-                echo "active";
-            } ?>" aria-current="true" aria-label="Slide: <?php echo $producto->id-1?>"></li>
-            <?php $i++;} $i=0;?>
-        </ol>
-        <div class="carousel-inner" role="listbox">
-        <!-- Cargar las imagenes al carousel -->
-        <?php foreach ($productos->productos as $producto) { ?>
-            <div class="<?php if($i == 0){
-                echo "carousel-item active";
-            }
-            else
-            {
-                echo "carousel-item";
-            }?>">
-            <?php echo '<img style="max-height: 400px; border-radius:20%;" class="w-50 d-block" alt="slide'.$i.'" style="border-radius: 20%;"src="'.$producto->imagen.'">'?>
-            <div style="background-color: purple; width:400px;padding: 10px; height: 200px;" class="p-6 mb-4 rounded-3 carousel-caption position-absolute top-0 start-50">
-                <p style="color: white;font-family:TipografiaElegante;font-size: 22px;"><b><?php echo $producto->nombre?></b>
-                <br><b>Precio:</b> Bs. <?php echo $producto->precio?>
-                <br><b>Actualmente quedan:</b> <?php echo $producto->cantidad?> ejemplares</p>
-                <form method="post">
-                    <?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
-                    <input name="habilitadoCompra" type="number" hidden value="1">
-                    <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
-                    <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
-                    <input name="precio" type="number" hidden value="<?php echo $producto->precio ?>">
-                    <input name="stock" type="number" hidden value="<?php echo $producto->cantidad ?>">
-                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
-                        Añadir al carrito
-                    </button>
-                    <?php 
-                    }
-                    else if(isset($usuarioSesion) && $usuarioSesion->tipo != 3) {  ?>
-                    <input name="inhabilitadoCompra" type="number" hidden value="1">
-                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Primero inicia sesión con tu cuenta.">Añadir al carrito</button>
-                    <?php }?>
-                </form>
+    <?php foreach ($productos->productos as $producto) { ?>
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <img style="width:250px;" src=<?php echo $producto->imagen ?>>
+                    <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
+                    <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
+                    <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
+                    <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Categoria:</b> <?php echo $producto->categoria ?></h4>
+                    <hr>
+                    <form method="post">
+                            <?php if (isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
+                                <input name="habilitadoCompra" type="number" hidden value="1">
+                                <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
+                                <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
+                                <input name="precio" type="number" hidden value="<?php echo $producto->precio ?>">
+                                <input name="stock" type="number" hidden value="<?php echo $producto->cantidad ?>">
+                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                                    Añadir al carrito <i class="bi bi-cart-plus-fill"></i>
+                                </button>
+                            <?php
+                            } else if (isset($usuarioSesion) && $usuarioSesion->tipo != 3) {  ?>
+                                <input name="inhabilitadoCompra" type="number" hidden value="1">
+                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Debe ser un usuario de tipo cliente">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
+                            <?php } else if (!isset($usuarioSesion)) {?>
+                                <input name="inhabilitadoCompra" type="number" hidden value="1">
+                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Primero inicia sesión con tu cuenta.">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
+                            <?php }?> 
+                    </form>
+                </div>
             </div>
-            </div>
-        <?php $i++;}?>
         </div>
-        <button style="background-color: purple; width: 30px;" class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button style="background-color: purple; width: 30px;" class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-    <!-- Modal carrito -->
-    <div style="position: sticky; bottom: 500px;" class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <?php } ?>
+</div>
+<!-- Carrito -->
+<div style="position: sticky; bottom: 500px;" class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                    <div class="modal-header">
-                            <h5 class="modal-title" id="modalTitleId">Carrito de pedidos <i class="bi bi-cart"></i></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">Carrito de pedidos <i class="bi bi-cart"></i></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
                 <div style="overflow-y: auto;  max-height: 500px;" class="modal-body">
                     <div>
-                        <h5>Productos agregados: <?php echo (count($productosCarrito->compras));?></h5>
+                        <h5>Productos agregados: <?php echo (count($productosCarrito->compras)); ?></h5>
                         <?php
                         // Obtener el carrito de compras de la sesión
                         $total = 0;
@@ -281,8 +376,8 @@
                                 echo "
                                 <form name='formCantidad' method='post'>
                                 <label for='cantidad' class='form-label'>Cantidad</label>
-                                <input type='number'class='form-control'min=1 max='".$producto->stock."' name='cantidad".$numCant."' value='$producto->cantidad'>";
-                                $total += $producto->precio*$producto->cantidad;
+                                <input type='number'class='form-control'min=1 max='" . $producto->stock . "' name='cantidad" . $numCant . "' value='$producto->cantidad'>";
+                                $total += $producto->precio * $producto->cantidad;
                                 $numCant++;
                             }
                             echo "
@@ -294,7 +389,7 @@
                             </button>
                             </form>";
                         }
-                    ?>
+                        ?>
                     </div>
                 </div>
                 <div style="overflow-y: auto;  max-height: 300px;" class="modal-footer">
@@ -310,54 +405,68 @@
     </div>
     <script>
         var modalId = document.getElementById('modalId');
-        modalId.addEventListener('show.bs.modal', function (event) {
-              // Button that triggered the modal
-              let button = event.relatedTarget;
-              // Extract info from data-bs-* attributes
-              let recipient = button.getAttribute('data-bs-whatever');
-    
+        modalId.addEventListener('show.bs.modal', function(event) {
+            // Button that triggered the modal
+            let button = event.relatedTarget;
+            // Extract info from data-bs-* attributes
+            let recipient = button.getAttribute('data-bs-whatever');
+
             // Use above variables to manipulate the DOM
         });
     </script>
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Bienvenido a la página oficial gemas meyer Bolivia.</h1>
+        <h4>Misión</h4>
+        <p class="col-md-8 fs-4">Brindar a los clientes la alternativa de adquirir joyas al "precio justo", piedras preciosas naturales talladas en Bolivia, engarzadas en metales nobles de origen boliviano, labrados por artesanos orfebres locales, brindando empleos y generando impacto social, y a su vez logrando que llege sus manos una pieza de joyería de alta calidad.</p>
+        <p class="col-md-8 fs-4"><b>Conoce mas de nosotros</b></p>
+        <img width="450" height="350" src="resources/img_demostracion_2.jpg">
+        <br><br>
+        <a class="btn btn-primary btn-lg" href="https://www.labolivianitameyergems.com/nosotros" target="_blank">About us</a>
+    </div>
 </div>
-<?php
-        //SIN USO
-        //función para devolver un json a partir de un array
-        // Acceder a los datos y trabajar con ellos, JSON_UNESCAPED_UNICODE permite ver los datos con   la tílde
-        /*function decodificar_json($arrayObjetos)
-        {
-            return json_encode($arrayObjetos, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-        }
 
-        echo (decodificar_json(construirEndpoint('Usuario', 'ObtenerUsuarios')));
-        echo '<br>';
-        //devolver un objeto especifico
-        echo (decodificar_json(construirEndpoint('Usuario', 'ObtenerUsuarios')[0]));
-        echo '<br>';
-        //devolver una propiedad de un objeto especifico
-        echo (decodificar_json(construirEndpoint('Usuario', 'ObtenerUsuarios')[0]->nombreCompleto));
-        //Agregar a todos los usuarios desde el endpoint
-        $usuarios = new Usuarios();
-        //agregar todos los usuarios al objeto Usuarios
-        foreach (construirEndpoint('Usuario', 'ObtenerUsuarios') as $usuario) {
-            $usuarios->agregarUsuario(new Usuario(
-                $usuario->ci,
-                $usuario->clave,
-                $usuario->correo,
-                $usuario->tipo,
-                $usuario->estado,
-                $usuario->nombreCompleto
-            ));
-        }
-        echo "<br>";
-        session_start();
-        $_SESSION['usuarios'] = $usuarios;
-        // Acceder al array de usuarios, ver a todos los usuarios
-        foreach ($usuarios->usuarios as $usuario) {
-            echo "CI: $usuario->ci | Clave: $usuario->clave | Correo: $usuario->correo | Tipo: " . ($usuario->tipo == 1 ? "Administrador" : ($usuario->tipo == 2 ? "Vendedor" : "Cliente")) . " | Estado: " . ($usuario->estado == 0 ? "Inactivo" : ($usuario->estado == 1 ? "Activo" : "Eliminado")) . " | Nombre completo: $usuario->nombreCompleto";
-            echo "<br>";
-        }
-        //echo(construirEndpoint('Producto','ObtenerProductos'));
-        */
-?>
-<?php include('plantillas/footer.php');?>
+    <h4>Productos disponibles para pedir:</h4>
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <!-- Asignar índices para cada imagen -->
+            <?php $i = 0;
+            foreach ($productos->productos as $producto) { ?>
+                <li data-bs-target="#carouselId" data-bs-slide-to="<?php echo $i ?>" class="<?php
+                    if ($i == 0) {
+                        echo "active";
+                    } ?>" aria-current="true" aria-label="Slide: <?php echo $producto->id - 1 ?>"></li>
+            <?php $i++;
+            }
+            $i = 0; ?>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <!-- Cargar las imagenes al carousel -->
+            <?php foreach ($productos->productos as $producto) { ?>
+                <div class="<?php if ($i == 0) {
+                                echo "carousel-item active";
+                            } else {
+                                echo "carousel-item";
+                            } ?>">
+                    <?php echo '<img style="max-height: 400px; border-radius:20%;" class="w-50 d-block" alt="slide' . $i . '" style="border-radius: 20%;"src="' . $producto->imagen . '">' ?>
+                    <div style="background-color: purple; width:400px;padding: 10px; height: 200px;" class="p-6 mb-4 rounded-3 carousel-caption position-absolute top-0 start-50">
+                        <p style="color: white;font-family:TipografiaElegante;font-size: 22px;"><b><?php echo $producto->nombre ?></b>
+                            <br><b>Precio:</b> Bs. <?php echo $producto->precio ?>
+                            <br><b>Actualmente quedan:</b> <?php echo $producto->cantidad ?> ejemplares
+                        </p>
+                        
+                    </div>
+                </div>
+            <?php $i++;
+            } ?>
+        </div>
+        <button style="background-color: purple; width: 30px;" class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button style="background-color: purple; width: 30px;" class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div> 
+<?php include('plantillas/footer.php'); ?>
