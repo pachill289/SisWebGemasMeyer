@@ -80,7 +80,8 @@
                 $producto->precio,
                 $producto->cantidad,
                 $producto->estado,
-                $producto->imagen
+                $producto->imagen,
+                $producto->categoria
             ));
         }
     }

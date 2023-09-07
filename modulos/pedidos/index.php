@@ -145,7 +145,8 @@
             $producto->precio,
             $producto->cantidad,
             $producto->estado,
-            $producto->imagen
+            $producto->imagen,
+            $producto->categoria
         ));
     }
      
@@ -168,7 +169,8 @@
                     </thead>
                     <tbody>
                         <!-- Obtener todos los pedidos -->
-                        <?php foreach ($pedidos->pedidos as $pedido) { ?>
+                        <?php foreach ($pedidos->pedidos as $pedido) { 
+                            if($pedido->estado == 1 || $pedido->estado == 3) { ?>
                         <tr class="">
                             <td scope="row"><?php echo $pedido->idPedido?></td>
                             <td><?php foreach ($usuarios->usuarios as $usuario) {
@@ -217,7 +219,8 @@
                                 <a name="" id="" class="btn btn-danger" href="index.php?idAnular=<?php echo $pedido->idPedido;?>" role="button">Anular pedido <i class="bi bi-arrow-down-circle"></i></a>
                             </td>
                         </tr>
-                        <?php }?>
+                        <?php } 
+                    }?>
                     </tbody>
                 </table>
             </div>

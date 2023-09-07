@@ -162,6 +162,20 @@ if ($_POST) {
             alertAviso("Mensaje ⚠","Lo sentimos no pudimos encontrar ningún producto con esa categoría en este momento.","Aceptar");
         }
     }
+    else
+    {
+        foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+            $productos->agregarProducto(new Producto(
+                $producto->idProducto,
+                $producto->nombre,
+                $producto->precio,
+                $producto->cantidad,
+                $producto->estado,
+                $producto->imagen,
+                $producto->categoria
+            ));
+        }
+    }
 }
 else
 {
@@ -180,13 +194,43 @@ else
 ?>
 
 <?php include('plantillas/header.php'); ?>
-
-<br />
+<nav style="width:100%;z-index:9999;" class="navbar navbar-expand navbar-light bg-light sticky-top">
+      <div class="container">
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" aria-current="page"><h3>Inicio</h3></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#joyas"><h3>Catálogo de joyas</h3></a>
+                </li>
+            </ul>
+        </div>
+  </div>
+</nav>
+<br/>
+<div class="p-5 mb-4 bg-light rounded-3">
+<h1 class="display-5 fw-bold">Bienvenido a la página oficial gemas meyer Bolivia.</h1>
+    <div class="container-fluid py-5">
+        <h4>Misión</h4>
+        <p class="col-md-8 fs-4">Brindar a los clientes la alternativa de adquirir joyas al "precio justo", piedras preciosas naturales talladas en Bolivia, engarzadas en metales nobles de origen boliviano, labrados por artesanos orfebres locales, brindando empleos y generando impacto social, y a su vez logrando que llege a sus manos una pieza de joyería de alta calidad.</p>
+        <p class="col-md-8 fs-4"><b>Conoce mas de nosotros</b></p>
+        <img width="450" height="350" src="resources/img_demostracion_2.jpg">
+        <br><br>
+        <a class="btn btn-primary btn-lg" href="https://www.facebook.com/profile.php?id=100089640294548" target="_blank">Visitar Museo Gemológico <i class="bi bi-facebook"></i></a>   
+    </div>
+</div>
+<div id="joyas" style="margin-bottom: 70px;" class="card">
+    <div class="card-body">
+        <h3 class="card-title">Catálogo</h3>
+    </div>
+</div>
 <!-- Tarea 2 barra lateral -->
 <aside style="float: left;margin-left:-100px;margin-right:10px;" class="col-sm-auto bg-light sticky-top">
     <div class="container-fluid">
         <div class="row">
-            <div class="d-flex flex-sm-column flex-row flex-nowrap bg-light align-items-center sticky-top">
+            <div style="overflow-y:auto;max-height:500px;"  class="d-flex flex-sm-column flex-row flex-nowrap bg-light align-items-center sticky-top">
+                <?php espacio_br(3) ?>
                 <h2>Buscar joyas</h2>
                 <?php espacio_br(1) ?>
                 <h4>Filtrar por precio en Bs.</h4>
@@ -324,8 +368,6 @@ else
                     <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
                     <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
                     <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
-                    <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Categoria:</b> <?php echo $producto->categoria ?></h4>
-                    <hr>
                     <form method="post">
                             <?php if (isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
                                 <input name="habilitadoCompra" type="number" hidden value="1">
@@ -414,59 +456,4 @@ else
             // Use above variables to manipulate the DOM
         });
     </script>
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Bienvenido a la página oficial gemas meyer Bolivia.</h1>
-        <h4>Misión</h4>
-        <p class="col-md-8 fs-4">Brindar a los clientes la alternativa de adquirir joyas al "precio justo", piedras preciosas naturales talladas en Bolivia, engarzadas en metales nobles de origen boliviano, labrados por artesanos orfebres locales, brindando empleos y generando impacto social, y a su vez logrando que llege sus manos una pieza de joyería de alta calidad.</p>
-        <p class="col-md-8 fs-4"><b>Conoce mas de nosotros</b></p>
-        <img width="450" height="350" src="resources/img_demostracion_2.jpg">
-        <br><br>
-        <a class="btn btn-primary btn-lg" href="https://www.labolivianitameyergems.com/nosotros" target="_blank">About us</a>
-    </div>
-</div>
-
-    <h4>Productos disponibles para pedir:</h4>
-    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-        <ol class="carousel-indicators">
-            <!-- Asignar índices para cada imagen -->
-            <?php $i = 0;
-            foreach ($productos->productos as $producto) { ?>
-                <li data-bs-target="#carouselId" data-bs-slide-to="<?php echo $i ?>" class="<?php
-                    if ($i == 0) {
-                        echo "active";
-                    } ?>" aria-current="true" aria-label="Slide: <?php echo $producto->id - 1 ?>"></li>
-            <?php $i++;
-            }
-            $i = 0; ?>
-        </ol>
-        <div class="carousel-inner" role="listbox">
-            <!-- Cargar las imagenes al carousel -->
-            <?php foreach ($productos->productos as $producto) { ?>
-                <div class="<?php if ($i == 0) {
-                                echo "carousel-item active";
-                            } else {
-                                echo "carousel-item";
-                            } ?>">
-                    <?php echo '<img style="max-height: 400px; border-radius:20%;" class="w-50 d-block" alt="slide' . $i . '" style="border-radius: 20%;"src="' . $producto->imagen . '">' ?>
-                    <div style="background-color: purple; width:400px;padding: 10px; height: 200px;" class="p-6 mb-4 rounded-3 carousel-caption position-absolute top-0 start-50">
-                        <p style="color: white;font-family:TipografiaElegante;font-size: 22px;"><b><?php echo $producto->nombre ?></b>
-                            <br><b>Precio:</b> Bs. <?php echo $producto->precio ?>
-                            <br><b>Actualmente quedan:</b> <?php echo $producto->cantidad ?> ejemplares
-                        </p>
-                        
-                    </div>
-                </div>
-            <?php $i++;
-            } ?>
-        </div>
-        <button style="background-color: purple; width: 30px;" class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button style="background-color: purple; width: 30px;" class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div> 
 <?php include('plantillas/footer.php'); ?>

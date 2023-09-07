@@ -48,7 +48,7 @@
     function alertAviso($titulo,$texto,$txtAceptar) {
         $html = "
         <!-- Modal Body -->
-        <div class='modal fade' id='modalId' tabindex='-1' role='dialog' aria-labelledby='modalTitleId' aria-hidden='true'>
+        <div style='z-index: 99999;' class='modal fade' id='modalId' tabindex='-1' role='dialog' aria-labelledby='modalTitleId' aria-hidden='true'>
             <div class='modal-dialog modal-dialog-scrollable modal-dialog-top modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>

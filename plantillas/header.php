@@ -16,7 +16,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="icon" href="<?php echo $url_base;?>/resources/favicon.png" type="image/png">
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <!-- Íconos -->
@@ -59,7 +59,7 @@
     <nav class="navbar navbar-expand navbar-light bg-light">
         <ul class="nav navbar-nav">
             <li class="nav-item">
-                <a style="font-size: xx-large;" class="nav-link active" href="<?php echo $url_base;?>" aria-current="page">Sistema Web Gemas Meyer<span class="visually-hidden">(current)</span></a>
+                <a style="font-size: xx-large;" class="nav-link active" href="<?php echo $url_base;?>" aria-current="page"><?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 1){ echo "Sistema Web Gemas Meyer";} else { echo "Página web gemas meyer";}?><span class="visually-hidden">(current)</span></a>
             </li>
             <li class="nav-item">
                 <?php if(isset($usuarioSesion)) {
@@ -94,6 +94,17 @@
                 {
                     echo "<h6><b>Bienvenido: $usuarioSesion->nombreCompleto</b></h6>";
                 }?>
+                <?php if(isset($usuarioSesion)) {?>
+                <div style="z-index: 99999;" class="dropdown open">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                               Perfil
+                            </button>
+                    <div class="dropdown-menu" aria-labelledby="triggerId">
+                        <a class="dropdown-item" href="#">Ver carrito</a>
+                    </div>
+                </div>
+                <?php }?>
             </li>
             <li class="nav-item">
                 <?php if(isset($usuarioSesion)) {?>
