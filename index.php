@@ -84,10 +84,14 @@ if (isset($_SESSION['comprasCarrito'])) {
     $productosCarrito = $_SESSION['comprasCarrito'];
 }
 $productos = new Productos();
-//agregar todos los productos al objeto Productos (arreglo de productos)
 
 //Validación compra
 if ($_POST) {
+    //Recuperar y mandar la petición de pedidos a la API
+    if(isset($_POST['pedidos']))
+    {
+        echo var_dump($_POST['pedidos']);
+    }
     if (isset($_POST['habilitadoCompra'])) {
         if ($_POST['habilitadoCompra'] == 1) {
             // Método para agregar productos al carrito
@@ -108,6 +112,7 @@ if ($_POST) {
                 // Agregar nuevo pedido al carrito
                 $productosCarrito->agregarCompraCarrito(new CompraCarrito(
                     $_POST['ciUsuarioCompra'],
+                    $_POST['idProducto'],
                     $_POST['nombreProducto'],
                     1,
                     $_POST['precio'],
@@ -122,8 +127,46 @@ if ($_POST) {
         }
     }
     if (isset($_POST['btnCompra'])) {
-        setcookie("compraPaypal", json_encode($productosCarrito), time() + 3600, "/");
-        header('Location:pago_paypal.php');
+        //setcookie("pedido", json_encode($productosCarrito), time() + 3600, "/");
+        date_default_timezone_set('America/La_Paz');
+        $fecha_hora_actual = date("Y-m-d");
+        foreach($productosCarrito->compras as $pedido){
+        // Datos del body
+          $datosUsuario = array(
+            "idUsuario" => $pedido->ciUsuario,
+            "idProducto" => intval($pedido->idProducto),
+            "estado" => 3,
+            "cantidad" => $pedido->cantidad,
+            "fecha" => $fecha_hora_actual
+          );
+
+          // Convertir el body a formato JSON
+          $jsonData = json_encode($datosUsuario);
+
+          // URL de la API
+          $url = "http://apijoyeriav2.somee.com/api/UsuarioPedido/RegistrarPedido";
+
+          // Configurar el flujo de contexto
+          $context = stream_context_create(array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => 'Content-Type: application/json',
+                'content' => $jsonData
+            )
+          ));
+
+          // Realizar la solicitud POST
+          $response = file_get_contents($url, false, $context);
+
+          // Verificar si la solicitud fue exitosa
+            if($response === false) {
+                $httpCode = http_response_code();
+                alertAviso("Error","El pedido no se ha realizado debido a un error","Aceptar");
+                echo "Error en la solicitud, el pedido no se pudo registrar por un error: $httpCode";
+                // Manejar el error de la API aquí
+            }
+        }
+        $productosCarrito->quitarCompras();
     }
     //filtrado
     if (isset($_POST['precioMin']) && isset($_POST['precioMax'])) {
@@ -192,7 +235,10 @@ else
     }
 }
 ?>
-
+<div class="mb-3">
+    <label class="visually-hidden" for="inputName">Hidden input label</label>
+    
+</div>
 <?php include('plantillas/header.php'); ?>
 <nav style="width:100%;z-index:9999;" class="navbar navbar-expand navbar-light bg-light sticky-top">
       <div class="container">
@@ -372,6 +418,7 @@ else
                             <?php if (isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
                                 <input name="habilitadoCompra" type="number" hidden value="1">
                                 <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
+                                <input name="idProducto" type="text" hidden value="<?php echo $producto->id ?>">
                                 <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
                                 <input name="precio" type="number" hidden value="<?php echo $producto->precio ?>">
                                 <input name="stock" type="number" hidden value="<?php echo $producto->cantidad ?>">
@@ -418,7 +465,7 @@ else
                                 echo "
                                 <form name='formCantidad' method='post'>
                                 <label for='cantidad' class='form-label'>Cantidad</label>
-                                <input type='number'class='form-control'min=1 max='" . $producto->stock . "' name='cantidad" . $numCant . "' value='$producto->cantidad'>";
+                                <input type='number' readonly class='form-control' min='1' max='" . $producto->stock . "' name='cantidad" . $numCant . "' value='$producto->cantidad'>";
                                 $total += $producto->precio * $producto->cantidad;
                                 $numCant++;
                             }
@@ -426,8 +473,6 @@ else
                             <hr/>
                             <label for='cantidad' class='form-label'>Total:</label>
                             Bs.<input type='number' readonly class='form-control' name='cantidad' value='$total'>
-                            <button style='margin-top: 20px;' type='submit' class='btn btn-success'>
-                            Guardar cambios <i class='bi bi-cart-check'></i>
                             </button>
                             </form>";
                         }

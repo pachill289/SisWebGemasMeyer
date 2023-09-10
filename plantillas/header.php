@@ -94,7 +94,7 @@
                 {
                     echo "<h6><b>Bienvenido: $usuarioSesion->nombreCompleto</b></h6>";
                 }?>
-                <?php if(isset($usuarioSesion)) {?>
+                <?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 3) {?>
                 <div style="z-index: 99999;" class="dropdown open">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">

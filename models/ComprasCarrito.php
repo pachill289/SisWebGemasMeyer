@@ -3,13 +3,15 @@
 class CompraCarrito {
     
     public $ciUsuario;
+    public $idProducto;
     public $nombreProducto;
     public $cantidad;
     public $precio;
     public $stock;
 
-    public function __construct($ciUsuario,$nombreProducto,$cantidad,$precio,$stock) {
+    public function __construct($ciUsuario,$idProducto,$nombreProducto,$cantidad,$precio,$stock) {
         $this->ciUsuario = $ciUsuario;
+        $this->idProducto = $idProducto;
         $this->nombreProducto = $nombreProducto;
         $this->cantidad = $cantidad;
         $this->precio = $precio;
