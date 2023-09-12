@@ -59,7 +59,7 @@
                         $texto
                     </div>
                     <div class='modal-footer'>
-                        <button type='button' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</button>
+                        <a type='button' href='#' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</a>
                     </div>
                 </div>
             </div>

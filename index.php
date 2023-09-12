@@ -160,6 +160,10 @@ if ($_POST) {
                 echo "Error en la solicitud, el pedido no se pudo registrar por un error: $httpCode";
                 // Manejar el error de la API aquí
             }
+            else
+            {
+                alertAviso("Mensaje", "El pedido se ha realizado con éxito", "Aceptar");
+            }
         }
         $productosCarrito->quitarCompras();
     }
