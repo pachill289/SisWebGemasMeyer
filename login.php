@@ -6,6 +6,7 @@ require_once('data/obtenerDatos.php');
 require_once('models/Usuarios.php');
 require_once('models/ComprasCarrito.php');
 session_start();
+$url_base = "http://localhost:8080/PaginaWebGM/modulos/productos/";
  //Agregar a todos los usuarios desde la API
  $usuarios = new Usuarios();
  //agregar todos los usuarios al objeto Usuarios
@@ -36,8 +37,12 @@ session_start();
                 {
                     $comprasCarrito = new ComprasCarrito();
                     $_SESSION['comprasCarrito'] = $comprasCarrito;
+                    header('Location:index.php');
                 }
-                header('Location:index.php');
+                else if($usuario->tipo == 1)
+                {
+                    header("Location:".$url_base);
+                }
             }
             else
             {

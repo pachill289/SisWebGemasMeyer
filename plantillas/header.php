@@ -59,7 +59,11 @@
     <nav class="navbar navbar-expand navbar-light bg-light">
         <ul class="nav navbar-nav">
             <li class="nav-item">
-                <a style="font-size: xx-large;" class="nav-link active" href="<?php echo $url_base;?>" aria-current="page"><?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 1){ echo "Sistema Web Gemas Meyer";} else { echo "Página web gemas meyer";}?><span class="visually-hidden">(current)</span></a>
+                <a style="font-size: xx-large;" class="nav-link active" href="<?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 1) {
+                    echo ($url_base."modulos/productos/index.php");
+                    } else {
+                        echo ($url_base);
+                    }?>" aria-current="page"><?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 1){ echo "Sistema Web Gemas Meyer";} else { echo "Página web gemas meyer";}?><span class="visually-hidden">(current)</span></a>
             </li>
             <li class="nav-item">
                 <?php if(isset($usuarioSesion)) {

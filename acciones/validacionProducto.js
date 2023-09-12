@@ -47,6 +47,22 @@ function validarDescripcion(value) {
       targetElement.text(texto);
     }
 }
+/* Por hacer
+function validarCategoria(value) {
+    function verificarCategoria(categoria) {
+        var regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 .\n]{5,50}$/; // Expresión regular que verifica solo letras en mayúsculas y minúsculas
+        return regex.test(categoria);
+    }
+    var targetElement = $("small").eq(1); // Acceder al primer elemento <small>
+    const texto = 'La categoría debe tener mínimamente 5 caracteres, no puede exceder los 50 caracteres y solo puede utilizar letras/espacio.';
+    if (verificarCategoria(value)) {
+      targetElement.css("color", "green");
+      targetElement.text(textoCorrecto);
+    } else {
+      targetElement.css("color", "red");
+      targetElement.text(texto);
+    }
+}*/
 function validarPrecio(value) {
     function verificarPrecio(precio) {
         if(precio>0)

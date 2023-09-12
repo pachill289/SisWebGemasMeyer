@@ -54,21 +54,20 @@
     //Agregar a todos los productos desde la API
     $productos = new Productos();
 
-    if (isset($_POST['botonListar3'])) {
-        $subCategoria = 'ObtenerProducto';
-        $nombreBusqueda = $_POST['nombreBusqueda'];
-        //agregar todos los productos al objeto Productos (arreglo de productos)
-        /*foreach (construirEndpointParametro('Producto', $subCategoria,$nombreBusqueda) as $producto) {
-            $productos->agregarProducto(new Producto(
-                $producto->idProducto,
-                $producto->nombre,
-                $producto->precio,
-                $producto->cantidad,
-                $producto->estado,
-                $producto->imagen
-            ));
-        }*/
-       var_dump(construirEndpointParametro('Producto', $subCategoria,$nombreBusqueda));
+    if (isset($_POST['botonListar3']) && isset($_POST['nombreBusqueda'])) {
+        foreach (construirEndpoint('Producto', $subCategoria) as $producto) {
+            if (stripos($producto->nombre, $_POST['nombreBusqueda']) !== false) {
+                $productos->agregarProducto(new Producto(
+                    $producto->idProducto,
+                    $producto->nombre,
+                    $producto->precio,
+                    $producto->cantidad,
+                    $producto->estado,
+                    $producto->imagen,
+                    $producto->categoria
+                ));
+            }
+        }
     }
     else
     {
@@ -149,7 +148,7 @@
                                     ($producto->estado == 1 ? "Activo" : "Eliminado"))?>
                                 </td>
                                 <td class="text-center">
-                                    <a name="" id="" class="btn btn-success" href="editar.php"  role="button">Editar <i class="bi bi-pencil-square"></i></a>
+                                <a class="btn btn-success" href="editar.php?txtId=<?php echo $producto->id;?>&txtNombre=<?php echo $producto->nombre;?>&txtCategoria=<?php echo $producto->categoria;?>&txtPrecio=<?php echo $producto->precio;?>&txtCantidad=<?php echo $producto->cantidad;?>&txtImagen=<?php echo $producto->imagen;?>" role="button">Editar <i class="bi bi-pencil-square"></i></a> 
                                 </td>
                             </tr>
                         <?php }?>
