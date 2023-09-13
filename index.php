@@ -241,8 +241,8 @@ if ($_POST) {
         <div class="collapse navbar-collapse" id="collapsibleNavId">
             <ul class="navbar-nav me-auto mt-2 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#" aria-current="page">
-                        <h3>Inicio</h3>
+                    <a class="nav-link active" href="#publicaciones" aria-current="page">
+                        <h3>Publicaciones</h3>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -250,22 +250,39 @@ if ($_POST) {
                         <h3>Catálogo de joyas</h3>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#mision">
+                        <h3>Misión y visión</h3>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 <br />
-<div class="p-5 mb-4 bg-light rounded-3">
-    <h1 class="display-5 fw-bold">Bienvenido a la página oficial gemas meyer Bolivia.</h1>
-    <div class="container-fluid py-5">
-        <h4>Misión</h4>
-        <p class="col-md-8 fs-4">Brindar a los clientes la alternativa de adquirir joyas al "precio justo", piedras preciosas naturales talladas en Bolivia, engarzadas en metales nobles de origen boliviano, labrados por artesanos orfebres locales, brindando empleos y generando impacto social, y a su vez logrando que llege a sus manos una pieza de joyería de alta calidad.</p>
-        <p class="col-md-8 fs-4"><b>Conoce mas de nosotros</b></p>
-        <img width="450" height="350" src="resources/img_demostracion_2.jpg">
-        <br><br>
-        <a class="btn btn-primary btn-lg" href="https://www.facebook.com/profile.php?id=100089640294548" target="_blank">Visitar Museo Gemológico <i class="bi bi-facebook"></i></a>
+<!-- publicaciones -->
+<div id="publicaciones" style="margin-bottom: 20px;" class="card">
+    <div class="card-body">
+        <h3 class="card-title">Publicaciones <i class="bi bi-newspaper"></i></h3>
     </div>
 </div>
+<div style="overflow-y: auto;  max-height: 500px;" class="bg-light rounded-3">
+    <div style="display:inline;">
+        <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src="resources/img_publicacion_prueba_1.jpg" alt="Imagen no disponible">
+        <h3 style="padding:10px;">La Bolivianita cumple 40 años, fue descubierta como la gema única en el mundo</h3>
+        <div class="mb-3" style="padding: 10px;">
+          <textarea readonly class="form-control" rows="3">La Bolivianita es una gema propia de Bolivia, un país con varios recursos naturales y que hasta el año 1983 escondía una de las gemas únicas en el mundo, por su color diferente, un intenso violeta con amarillo que gracias a Rodolfo Meyer fue descubierta, esto tras que un joven ayoreo le mostrara cuanto se dirigía de Santa Cruz a Puerto Suárez.</textarea>
+        </div>
+    </div>
+    <div style="display:inline;">
+        <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src="resources/img_publicacion_prueba_2.jpg" alt="Imagen no disponible">
+        <h3 style="padding:10px;">Lindas kullaquitas Cholitas, visitan nuestra joyería.</h3>
+        <div class="mb-3" style="padding: 10px;">
+          <textarea readonly class="form-control" rows="3">💜💎👸Lindas kullaquitas Cholitas, visitan nuestra joyería para adquirir las joyas más bellas, junto a Gemas Meyer "La Bolivianita".</textarea>
+        </div>
+    </div>
+</div>
+<!-- Catálogo -->
 <div id="joyas" style="margin-bottom: 70px;" class="card">
     <div class="card-body">
         <h3 class="card-title">Catálogo</h3>
@@ -452,42 +469,52 @@ if ($_POST) {
     } else {
         foreach ($productosMostrados as $producto) {
     ?>
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-body">
-                        <img style="width:220px;" src="<?php echo $producto->imagen ?>">
-                        <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
-                        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
-                        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
-                        <form method="post">
-                            <?php if (isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
-                                <input name="habilitadoCompra" type="number" hidden value="1">
-                                <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
-                                <input name="idProducto" type="text" hidden value="<?php echo $producto->id ?>">
-                                <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
-                                <input name="precio" type="number" hidden value="<?php echo $producto->precio ?>">
-                                <input name="stock" type="number" hidden value="<?php echo $producto->cantidad ?>">
-                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
-                                    Añadir al carrito <i class="bi bi-cart-plus-fill"></i>
-                                </button>
-                            <?php
-                            } else if (isset($usuarioSesion) && $usuarioSesion->tipo != 3) {  ?>
-                                <input name="inhabilitadoCompra" type="number" hidden value="1">
-                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Debe ser un usuario de tipo cliente">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
-                            <?php } else if (!isset($usuarioSesion)) { ?>
-                                <input name="inhabilitadoCompra" type="number" hidden value="1">
-                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Primero inicia sesión con tu cuenta.">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
-                            <?php } ?>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <!-- Ahora el catálogo es responsive con las clases: col-lg-4 col-md-6 col-sm-12 e img-fluid para las imágenes -->
+<div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="card">
+        <div class="card-body">
+            <img class="img-fluid" src="<?php echo $producto->imagen ?>" alt="<?php echo $producto->nombre ?>">
+            <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
+            <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
+            <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
+            <form method="post">
+                <?php if (isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
+                    <input name="habilitadoCompra" type="number" hidden value="1">
+                    <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
+                    <input name="idProducto" type="text" hidden value="<?php echo $producto->id ?>">
+                    <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
+                    <input name="precio" type="number" hidden value="<?php echo $producto->precio ?>">
+                    <input name="stock" type="number" hidden value="<?php echo $producto->cantidad ?>">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                        Añadir al carrito <i class="bi bi-cart-plus-fill"></i>
+                    </button>
+                <?php
+                } else if (isset($usuarioSesion) && $usuarioSesion->tipo != 3) {  ?>
+                    <input name="inhabilitadoCompra" type="number" hidden value="1">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Debe ser un usuario de tipo cliente">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
+                <?php } else if (!isset($usuarioSesion)) { ?>
+                    <input name="inhabilitadoCompra" type="number" hidden value="1">
+                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Primero inicia sesión con tu cuenta.">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
+                <?php } ?>
+            </form>
+        </div>
+    </div>
+</div>
     <?php
         }
     }
     ?>
 </div>
-
+<div id="mision" style="margin-left:270px;" class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h4>Misión</h4>
+        <p class="col-md-8 fs-4">Brindar a los clientes la alternativa de adquirir joyas al "precio justo", piedras preciosas naturales talladas en Bolivia, engarzadas en metales nobles de origen boliviano, labrados por artesanos orfebres locales, brindando empleos y generando impacto social, y a su vez logrando que llege a sus manos una pieza de joyería de alta calidad.</p>
+        <p class="col-md-8 fs-4"><b>Conoce mas de nosotros</b></p>
+        <img class="img-fluid" width="450" height="350" src="resources/img_demostracion_2.jpg">
+        <br><br>
+        <a class="btn btn-primary btn-lg" href="https://www.facebook.com/profile.php?id=100089640294548" target="_blank">Visitar Museo Gemológico <i class="bi bi-facebook"></i></a>
+    </div>
+</div>
 <!-- Carrito -->
 <div style="position: sticky; bottom: 500px;" class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -550,4 +577,6 @@ if ($_POST) {
         // Use above variables to manipulate the DOM
     });
 </script>
+<!-- Misión, links y footer-->
+
 <?php include('plantillas/footer.php'); ?>

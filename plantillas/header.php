@@ -1,6 +1,7 @@
 <?php
     //url base para desarrollo
-    $url_base = "http://localhost:8080/PaginaWebGM/";
+    $url_base = "http://localhost:8080/SisWebGemasMeyer/";
+    //url clase: $url_base = "http://localhost:80/SisWebGemasMeyer/";
     //url para prodcucción
     //$url_base = "http://gemas-meyer-demo.great-site.net/";
     if(isset($_COOKIE['usuario']))
