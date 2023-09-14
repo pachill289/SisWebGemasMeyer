@@ -7,9 +7,10 @@
         public $estado;
         public $cantidadProducto;
         public $fecha;
+        public $fecha_expiracion;
 
 
-        public function __construct($idPedido,$idUsuario,$idProducto,$estado,$cantidadProducto,$fecha)
+        public function __construct($idPedido,$idUsuario,$idProducto,$estado,$cantidadProducto,$fecha,$fecha_expiracion)
         {
             $this->idPedido = $idPedido;
             $this->idUsuario = $idUsuario;
@@ -17,6 +18,7 @@
             $this->estado = $estado;
             $this->cantidadProducto = $cantidadProducto;
             $this->fecha = $fecha;
+            $this->fecha_expiracion = $fecha_expiracion;
         }
     }
 

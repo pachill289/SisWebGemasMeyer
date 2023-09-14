@@ -124,7 +124,11 @@ if ($_POST) {
     if (isset($_POST['btnCompra'])) {
         //setcookie("pedido", json_encode($productosCarrito), time() + 3600, "/");
         date_default_timezone_set('America/La_Paz');
-        $fecha_hora_actual = date("Y-m-d");
+        $fecha_actual = date("Y-m-d");
+        $intervalo = new DateInterval("P3D");
+        $fecha_exp = new DateTime();
+        date_add($fecha_exp, $intervalo);
+        $fecha_exp = $fecha_exp->format('Y-m-d');
         foreach ($productosCarrito->compras as $pedido) {
             // Datos del body
             $datosUsuario = array(
@@ -132,14 +136,15 @@ if ($_POST) {
                 "idProducto" => intval($pedido->idProducto),
                 "estado" => 3,
                 "cantidad" => $pedido->cantidad,
-                "fecha" => $fecha_hora_actual
+                "fecha" => $fecha_actual,
+                "fechaExpiracion" => $fecha_exp
             );
 
             // Convertir el body a formato JSON
             $jsonData = json_encode($datosUsuario);
 
             // URL de la API
-            $url = "http://apijoyeriav2.somee.com/api/UsuarioPedido/RegistrarPedido";
+            $url = "https://apijoyeriav2.somee.com/api/UsuarioPedido/RegistrarPedido";
 
             // Configurar el flujo de contexto
             $context = stream_context_create(array(

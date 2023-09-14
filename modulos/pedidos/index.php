@@ -120,7 +120,8 @@
             $pedido->idProducto,
             $pedido->estado,
             $pedido->cantidad,
-            $pedido->fecha
+            $pedido->fecha,
+            $pedido->fechaExpiracion
          ));
      }
      //Agregar a todos los usuarios desde la API
@@ -163,6 +164,7 @@
                             <th scope="col">Producto</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col" title="Fecha en la cual el usuario pidió el producto">Fecha pedido</th>
+                            <th scope="col" title="Fecha de expiración del pedido">Fecha expiración</th>
                             <th scope="col"><b>Estado</b></th>
                             <th class="text-center" scope="col">Acciones</th>
                         </tr>
@@ -196,6 +198,7 @@
                                 ?></td>
                             <td><?php echo $pedido->cantidadProducto?></td>
                             <td><?php echo ((new DateTime($pedido->fecha))->format('d-m-y'))?></td>
+                            <td><?php echo ((new DateTime($pedido->fecha_expiracion))->format('d-m-y'))?></td>
                             <td><?php echo ($pedido->estado == 1 ? 
                             "<div class='alert alert-success' role='alert'>ENTREGADO</div>" : 
                             ($pedido->estado == 2 ? 
