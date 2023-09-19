@@ -65,6 +65,17 @@
         appearance: none;
         margin: 0;
     }
+
+
+    /* CSS para ocultar el mensaje de error por defecto */
+    .cantidad-error {
+        display: none;
+    }
+
+    /* CSS para mostrar el mensaje de error cuando se supere el stock */
+    .cantidad-input.is-invalid+.cantidad-error {
+        display: inline-block;
+    }
 </style>
 
 <?php
@@ -87,6 +98,8 @@ $productos = new Productos();
 
 //Validación compra
 if ($_POST) {
+    if(isset($_POST['cantidadNueva']))
+        echo $_POST['cantidadNueva'];
     if (isset($_POST['habilitadoCompra'])) {
         if ($_POST['habilitadoCompra'] == 1) {
             // Método para agregar productos al carrito
@@ -104,12 +117,17 @@ if ($_POST) {
             }
             //enviar al carrito de pedidos
             if (!$productoExistente) {
+                $cantidadNueva = 1;
+                if(isset($_POST['cantidadNueva']))
+                {
+                    $cantidadNueva = $_POST['cantidadNueva'];
+                }
                 // Agregar nuevo pedido al carrito
                 $productosCarrito->agregarCompraCarrito(new CompraCarrito(
                     $_POST['ciUsuarioCompra'],
                     $_POST['idProducto'],
                     $_POST['nombreProducto'],
-                    1,
+                    $cantidadNueva,
                     $_POST['precio'],
                     $_POST['stock']
                 ));
@@ -122,13 +140,16 @@ if ($_POST) {
         }
     }
     if (isset($_POST['btnCompra'])) {
-        //setcookie("pedido", json_encode($productosCarrito), time() + 3600, "/");
+        //Realizar pedido
+        //Determinar la fecha y hora de La Paz Bolivia
         date_default_timezone_set('America/La_Paz');
-        $fecha_actual = date("Y-m-d");
-        $intervalo = new DateInterval("P3D");
-        $fecha_exp = new DateTime();
-        date_add($fecha_exp, $intervalo);
-        $fecha_exp = $fecha_exp->format('Y-m-d');
+        $fecha_actual = date("Y-m-d\TH:i:s.u\Z");
+        // Convertir la fecha actual en un objeto DateTime
+        $fechaObjeto = new DateTime($fecha_actual);
+        // Aumentar 3 días
+        $fechaObjeto->modify('+3 days');
+        // Obtener la nueva fecha en formato de cadena
+        $fecha_exp = $fechaObjeto->format('Y-m-d\TH:i:s.u\Z');
         foreach ($productosCarrito->compras as $pedido) {
             // Datos del body
             $datosUsuario = array(
@@ -137,7 +158,7 @@ if ($_POST) {
                 "estado" => 3,
                 "cantidad" => $pedido->cantidad,
                 "fecha" => $fecha_actual,
-                "fechaExpiracion" => $fecha_exp
+                "fecha_expiracion" => $fecha_exp
             );
 
             // Convertir el body a formato JSON
@@ -164,13 +185,34 @@ if ($_POST) {
                 alertAviso("Error", "El pedido no se ha realizado debido a un error", "Aceptar");
                 echo "Error en la solicitud, el pedido no se pudo registrar por un error: $httpCode";
                 // Manejar el error de la API aquí
-            }
-            else
-            {
+            } else {
                 alertAviso("Mensaje", "El pedido se ha realizado con éxito", "Aceptar");
             }
         }
         $productosCarrito->quitarCompras();
+    }
+    //Borrar productos del carrito
+    // Verificar si se envió el formulario para quitar un producto
+    if (isset($_POST['btnQuitar'])) {
+        $productoId = $_POST['productoId'];
+    
+        // Obtener el carrito de compras de la sesión
+        $productosCarrito = isset($_SESSION['comprasCarrito']) ? $_SESSION['comprasCarrito'] : new stdClass();
+    
+        // Buscar y eliminar el producto del carrito por su ID
+        foreach ($productosCarrito->compras as $indice => $producto) {
+            if ($producto->idProducto == $productoId) {
+                unset($productosCarrito->compras[$indice]);
+                break; // Detener el bucle una vez que se elimine el producto
+            }
+        }
+    
+        // Actualizar la sesión del carrito
+        $_SESSION['comprasCarrito'] = $productosCarrito;
+    
+        // Redirigir de nuevo al carrito o a donde desees
+        alertAviso("Mensaje", "Producto eliminado", "Aceptar");
+        header("Location:index.php");
     }
     //filtrado
     if (isset($_POST['precioMin']) && isset($_POST['precioMax'])) {
@@ -276,14 +318,14 @@ if ($_POST) {
         <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src="resources/img_publicacion_prueba_1.jpg" alt="Imagen no disponible">
         <h3 style="padding:10px;">La Bolivianita cumple 40 años, fue descubierta como la gema única en el mundo</h3>
         <div class="mb-3" style="padding: 10px;">
-          <textarea readonly class="form-control" rows="3">La Bolivianita es una gema propia de Bolivia, un país con varios recursos naturales y que hasta el año 1983 escondía una de las gemas únicas en el mundo, por su color diferente, un intenso violeta con amarillo que gracias a Rodolfo Meyer fue descubierta, esto tras que un joven ayoreo le mostrara cuanto se dirigía de Santa Cruz a Puerto Suárez.</textarea>
+            <textarea readonly class="form-control" rows="3">La Bolivianita es una gema propia de Bolivia, un país con varios recursos naturales y que hasta el año 1983 escondía una de las gemas únicas en el mundo, por su color diferente, un intenso violeta con amarillo que gracias a Rodolfo Meyer fue descubierta, esto tras que un joven ayoreo le mostrara cuanto se dirigía de Santa Cruz a Puerto Suárez.</textarea>
         </div>
     </div>
     <div style="display:inline;">
         <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src="resources/img_publicacion_prueba_2.jpg" alt="Imagen no disponible">
         <h3 style="padding:10px;">Lindas kullaquitas Cholitas, visitan nuestra joyería.</h3>
         <div class="mb-3" style="padding: 10px;">
-          <textarea readonly class="form-control" rows="3">💜💎👸Lindas kullaquitas Cholitas, visitan nuestra joyería para adquirir las joyas más bellas, junto a Gemas Meyer "La Bolivianita".</textarea>
+            <textarea readonly class="form-control" rows="3">💜💎👸Lindas kullaquitas Cholitas, visitan nuestra joyería para adquirir las joyas más bellas, junto a Gemas Meyer "La Bolivianita".</textarea>
         </div>
     </div>
 </div>
@@ -303,13 +345,13 @@ if ($_POST) {
                 los valores que se obtienen no son dinámicos es decir que son valores aproximados, en el campo value se actualiza de acuerdo a la última selección que hizo el usuario -->
                 <div class="range text-center">
                     <form method="post" id="filtroForm">
-                            <?php espacio_br(1) ?>
-                            <h2>Buscar joyas</h2>
-                            <p> Filtrado por nombre</p>
-                            <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" placeholder="Ingrese el nombre del producto" style="width: 300px; padding: 10px; border: 2px solid #ed5dd4; border-radius: 5px; font-size: 16px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
-                            <?php espacio_br(1) ?>
-                            <h4>Filtrar por precio en Bs.</h4>
-                            <?php espacio_br(1) ?>
+                        <?php espacio_br(1) ?>
+                        <h2>Buscar joyas</h2>
+                        <p> Filtrado por nombre</p>
+                        <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" placeholder="Ingrese el nombre del producto" style="width: 300px; padding: 10px; border: 2px solid #ed5dd4; border-radius: 5px; font-size: 16px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
+                        <?php espacio_br(1) ?>
+                        <h4>Filtrar por precio en Bs.</h4>
+                        <?php espacio_br(1) ?>
                         <div class="containerSli">
                             <div class="min-value numberVal" style="display: inline-flex; margin-right: 25px; margin-left: 5px;">
                                 <label>Mínimo </label>
@@ -474,37 +516,37 @@ if ($_POST) {
     } else {
         foreach ($productosMostrados as $producto) {
     ?>
-    <!-- Ahora el catálogo es responsive con las clases: col-lg-4 col-md-6 col-sm-12 e img-fluid para las imágenes -->
-<div class="col-lg-4 col-md-6 col-sm-12">
-    <div class="card">
-        <div class="card-body">
-            <img class="img-fluid" src="<?php echo $producto->imagen ?>" alt="<?php echo $producto->nombre ?>">
-            <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
-            <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
-            <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
-            <form method="post">
-                <?php if (isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
-                    <input name="habilitadoCompra" type="number" hidden value="1">
-                    <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
-                    <input name="idProducto" type="text" hidden value="<?php echo $producto->id ?>">
-                    <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
-                    <input name="precio" type="number" hidden value="<?php echo $producto->precio ?>">
-                    <input name="stock" type="number" hidden value="<?php echo $producto->cantidad ?>">
-                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
-                        Añadir al carrito <i class="bi bi-cart-plus-fill"></i>
-                    </button>
-                <?php
-                } else if (isset($usuarioSesion) && $usuarioSesion->tipo != 3) {  ?>
-                    <input name="inhabilitadoCompra" type="number" hidden value="1">
-                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Debe ser un usuario de tipo cliente">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
-                <?php } else if (!isset($usuarioSesion)) { ?>
-                    <input name="inhabilitadoCompra" type="number" hidden value="1">
-                    <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Primero inicia sesión con tu cuenta.">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
-                <?php } ?>
-            </form>
-        </div>
-    </div>
-</div>
+            <!-- Ahora el catálogo es responsive con las clases: col-lg-4 col-md-6 col-sm-12 e img-fluid para las imágenes -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="img-fluid" src="<?php echo $producto->imagen ?>" alt="<?php echo $producto->nombre ?>">
+                        <h3 style="font-family:TipografiaElegante-bold;font-size: 33px;" class="card-title"><?php echo $producto->nombre ?></h3>
+                        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Precio:</b> Bs.<?php echo $producto->precio ?></h4>
+                        <h4 style="font-family:TipografiaElegante;font-size: 22px;" class="card-text"><b>Cantidad:</b> <?php echo $producto->cantidad ?></h4>
+                        <form method="post">
+                            <?php if (isset($usuarioSesion) && $usuarioSesion->tipo == 3) { ?>
+                                <input name="habilitadoCompra" type="number" hidden value="1">
+                                <input name="ciUsuarioCompra" type="text" hidden value="<?php echo $usuarioSesion->ci ?>">
+                                <input name="idProducto" type="text" hidden value="<?php echo $producto->id ?>">
+                                <input name="nombreProducto" type="text" hidden value="<?php echo $producto->nombre ?>">
+                                <input name="precio" type="number" hidden value="<?php echo $producto->precio ?>">
+                                <input name="stock" type="number" hidden value="<?php echo $producto->cantidad ?>">
+                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-primary">
+                                    Añadir al carrito <i class="bi bi-cart-plus-fill"></i>
+                                </button>
+                            <?php
+                            } else if (isset($usuarioSesion) && $usuarioSesion->tipo != 3) {  ?>
+                                <input name="inhabilitadoCompra" type="number" hidden value="1">
+                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Debe ser un usuario de tipo cliente">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
+                            <?php } else if (!isset($usuarioSesion)) { ?>
+                                <input name="inhabilitadoCompra" type="number" hidden value="1">
+                                <button style="font-family:TipografiaElegante;font-size: 22px;" type="submit" class="btn btn-secondary" title="Primero inicia sesión con tu cuenta.">Añadir al carrito <i class="bi bi-cart-plus-fill"></i></button>
+                            <?php } ?>
+                        </form>
+                    </div>
+                </div>
+            </div>
     <?php
         }
     }
@@ -520,15 +562,17 @@ if ($_POST) {
         <a class="btn btn-primary btn-lg" href="https://www.facebook.com/profile.php?id=100089640294548" target="_blank">Visitar Museo Gemológico <i class="bi bi-facebook"></i></a>
     </div>
 </div>
+<!-- Carrito script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Carrito -->
-<div style="position: sticky; bottom: 500px;" class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
+<div style="position: sticky;" class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:1000px; margin-top: 100px;">
+        <div class="modal-content" style="width:800px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitleId">Carrito de pedidos <i class="bi bi-cart"></i></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div style="overflow-y: auto;  max-height: 500px;" class="modal-body">
+            <div style="overflow-y: auto; max-height: 500px;" class="modal-body">
                 <div>
                     <h5>Productos agregados: <?php echo (count($productosCarrito->compras)); ?></h5>
                     <?php
@@ -536,41 +580,108 @@ if ($_POST) {
                     $total = 0;
                     $numCant = 1;
                     if (isset($_SESSION['comprasCarrito'])) {
-                        // Mostrar los productos agregados al carrito
+                        // Mostrar los productos agregados al carrito en una tabla
+                        echo '<table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre producto</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Cantidad</th>
+                                        <th>Total por producto</th> <!-- Nueva columna para el total por producto -->
+                                        <th>Quitar</th> <!-- Agregar esta columna para el botón "Quitar" -->
+                                    </tr>
+                                </thead>
+                                <tbody>';
+
                         foreach ($productosCarrito->compras as $producto) {
-                            echo "<hr/>";
-                            echo "<h5>Nombre producto: </h5>";
-                            echo "<h6>$producto->nombreProducto</h6>";
-                            echo "<h5>Precio: </h5>";
-                            echo "<h6>Bs. $producto->precio</h6>";
-                            echo "
-                                <form name='formCantidad' method='post'>
-                                <label for='cantidad' class='form-label'>Cantidad</label>
-                                <input type='number' readonly class='form-control' min='1' max='" . $producto->stock . "' name='cantidad" . $numCant . "' value='$producto->cantidad'>";
-                            $total += $producto->precio * $producto->cantidad;
+                            echo '<tr>';
+                            echo '<td>' . $producto->nombreProducto . '</td>';
+                            echo '<td class="precio-producto" data-producto-id="' . $producto->idProducto . '">Bs. ' . $producto->precio . '</td>';
+                            echo '<td>' . $producto->stock . '</td>';
+
+                            echo '<td>
+                                <form name="formCantidad" method="post">
+                                    <input name="cantidadNueva" type="number" class="form-control cantidad-input" min="1" max="' . $producto->stock . '" data-producto-id="' . $producto->idProducto . '" value="' . $producto->cantidad . '">
+                                    <br/>
+                                    <span class="text-danger cantidad-error">La cantidad no es válida</span>
+                                </form>
+                            </td>';
+
+
+                            $totalProducto = $producto->precio * $producto->cantidad; // Calcular el total por producto
+                            echo '<td class="total-producto" data-producto-id="' . $producto->idProducto . '">Bs. ' . $totalProducto . '</td>';
+
+                            echo '<td>
+                                    <form method="post">
+                                        <button name="btnQuitar" type="submit" class="btn btn-danger">
+                                            Quitar <i class="bi bi-trash"></i>
+                                        </button>
+                                        <input type="hidden" name="productoId" value="' . $producto->idProducto . '">
+                                    </form>
+                                    
+                                </td>';
+                            echo '</tr>';
+
+                            $total += $totalProducto; // Utilizar el total por producto en lugar de calcularlo nuevamente
                             $numCant++;
                         }
-                        echo "
-                            <hr/>
-                            <label for='cantidad' class='form-label'>Total:</label>
-                            Bs.<input type='number' readonly class='form-control' name='cantidad' value='$total'>
-                            </button>
-                            </form>";
+
+                        echo "</tbody></table>";
+
+                        echo '<hr/>
+                            <label for="cantidad" class="form-label">Total:</label>
+                            Bs. <input type="number" readonly class="form-control" name="cantidad" value="' . $total . '">';
                     }
                     ?>
                 </div>
             </div>
-            <div style="overflow-y: auto;  max-height: 300px;" class="modal-footer">
+            <div style="overflow-y: auto; max-height: 300px;" class="modal-footer justify-content-start">
                 <a name="" id="" class="btn btn-danger" href="borrar_carrito.php" role="button">Vaciar carrito <i class="bi bi-trash"></i></a>
                 <form method="post">
                     <button name="btnCompra" type="submit" class="btn btn-primary">
                         Realizar pedido <i class="bi bi-cart-check-fill"></i>
                     </button>
                 </form>
+                <form method="post" for="formCantidad">
+                    
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+    // Actualizar totales y validar cantidad cuando se cambia la cantidad
+    $('.cantidad-input').on('input', function() {
+        const cantidadInput = $(this);
+        const cantidad = parseInt(cantidadInput.val());
+        const productoId = cantidadInput.data('producto-id');
+        const precio = parseFloat($(`#modalId .precio-producto[data-producto-id="${productoId}"]`).text().replace('Bs. ', ''));
+        const stock = parseInt(cantidadInput.attr('max'));
+
+        if (cantidad > stock || cantidad <= 0) {
+            // Mostrar un mensaje de error si la cantidad supera el stock
+            cantidadInput.addClass('is-invalid').text('Cantidad insuficiente');
+        } else {
+            // Quitar el mensaje de error si es válido
+            cantidadInput.removeClass('is-invalid');
+
+            const nuevoTotal = cantidad * precio;
+
+            // Actualizar el total por producto toFixed(2)
+            $(`#modalId .total-producto[data-producto-id="${productoId}"]`).text('Bs. ' + nuevoTotal);
+
+            // Actualizar el total general
+            let totalGeneral = 0;
+            $('.total-producto').each(function() {
+                totalGeneral += parseFloat($(this).text().replace('Bs. ', ''));
+            });
+            $('input[name="cantidad"]').val(totalGeneral.toFixed(2));
+        }
+    });
+</script>
 <script>
     var modalId = document.getElementById('modalId');
     modalId.addEventListener('show.bs.modal', function(event) {

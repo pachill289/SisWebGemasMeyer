@@ -11,9 +11,20 @@
 ?>
 <!doctype html>
 <html lang="es">
-
 <head>
-    <title>Sistema Web Gemas Meyer</title>
+    <title><?php 
+    if(isset($usuarioSesion)) { 
+        if($usuarioSesion->tipo == 3)
+        {
+            echo "Página Web Gemas Meyer";
+        }
+        else {
+            echo "Sistema Web Gemas Meyer";
+        }
+    }
+    else {
+        echo "Página Web Gemas Meyer";
+    }?></title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

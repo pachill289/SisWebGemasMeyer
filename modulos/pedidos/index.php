@@ -121,7 +121,7 @@
             $pedido->estado,
             $pedido->cantidad,
             $pedido->fecha,
-            $pedido->fechaExpiracion
+            $pedido->fecha_expiracion
          ));
      }
      //Agregar a todos los usuarios desde la API
