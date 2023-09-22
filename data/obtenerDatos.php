@@ -3,11 +3,10 @@
 * Esta función obtiene endpoints desde una url de una API de tipo http
 */
 function construirEndpoint($categoria, $subcategoria) {
-    $baseURL = 'https://apijoyeriav2.somee.com';
-    $endpoint = '/api/';
 
-    // Concatenar las partes del endpoint
-    $endpoint .= $categoria . '/' . $subcategoria;
+    $baseURL = 'https://apijoyeriav2.somee.com';
+
+    $endpoint = "/api/$categoria/$subcategoria";
 
     // Construir la URL completa del endpoint
     $url = $baseURL . $endpoint;
@@ -33,11 +32,10 @@ function construirEndpoint($categoria, $subcategoria) {
     }
 }
 function construirEndpointParametro($categoria, $subcategoria,$arg) {
-    $baseURL = 'https://apijoyeriav2.somee.com';
-    $endpoint = '/api/';
 
-    // Concatenar las partes del endpoint
-    $endpoint .= $categoria . '/' . $subcategoria.'/'.$arg;
+    $baseURL = 'https://apijoyeriav2.somee.com';
+
+    $endpoint = "/api/$categoria/$subcategoria/$arg";
 
     // Construir la URL completa del endpoint
     $url = $baseURL . $endpoint;

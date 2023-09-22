@@ -84,6 +84,7 @@ require('componentes/componentesHtml.php');
 //obtener los prodcutos en stock
 require_once('data/obtenerDatos.php');
 require_once('models/Productos.php');
+require_once('models/Publicaciones.php');
 require_once('models/ComprasCarrito.php');
 session_start();
 //recuperar la sesión del usuario si este ha iniciado sesión
@@ -95,7 +96,18 @@ if (isset($_SESSION['comprasCarrito'])) {
     $productosCarrito = $_SESSION['comprasCarrito'];
 }
 $productos = new Productos();
-
+//Añadir las publicaciones desde la API
+$publicaciones = new Publicaciones();
+foreach (construirEndpoint('UsuarioPublicacion', 'ObtenerPublicaciones') as $publicacion) {
+    $publicaciones->agregarPublicacion(new Publicacion(
+        $publicacion->idPublicacion,
+        $publicacion->titulo,
+        $publicacion->descripcion,
+        $publicacion->imagen,
+        $publicacion->estado,
+        $publicacion->tipo
+    ));
+}
 //Validación compra
 if ($_POST) {
     if(isset($_POST['cantidadNueva']))
@@ -314,20 +326,15 @@ if ($_POST) {
     </div>
 </div>
 <div style="overflow-y: auto;  max-height: 500px;" class="bg-light rounded-3">
+    <?php foreach($publicaciones->publicaciones as $publicacion) {?>
     <div style="display:inline;">
-        <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src="resources/img_publicacion_prueba_1.jpg" alt="Imagen no disponible">
-        <h3 style="padding:10px;">La Bolivianita cumple 40 años, fue descubierta como la gema única en el mundo</h3>
+        <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src=<?php echo $publicacion->imagen ?> alt="Imagen no disponible">
+        <h3 style="padding:10px;"><?php echo $publicacion->titulo ?></h3>
         <div class="mb-3" style="padding: 10px;">
-            <textarea readonly class="form-control" rows="3">La Bolivianita es una gema propia de Bolivia, un país con varios recursos naturales y que hasta el año 1983 escondía una de las gemas únicas en el mundo, por su color diferente, un intenso violeta con amarillo que gracias a Rodolfo Meyer fue descubierta, esto tras que un joven ayoreo le mostrara cuanto se dirigía de Santa Cruz a Puerto Suárez.</textarea>
+            <textarea readonly class="form-control" rows="3"><?php echo $publicacion->descripcion ?></textarea>
         </div>
     </div>
-    <div style="display:inline;">
-        <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src="resources/img_publicacion_prueba_2.jpg" alt="Imagen no disponible">
-        <h3 style="padding:10px;">Lindas kullaquitas Cholitas, visitan nuestra joyería.</h3>
-        <div class="mb-3" style="padding: 10px;">
-            <textarea readonly class="form-control" rows="3">💜💎👸Lindas kullaquitas Cholitas, visitan nuestra joyería para adquirir las joyas más bellas, junto a Gemas Meyer "La Bolivianita".</textarea>
-        </div>
-    </div>
+    <?php }?>
 </div>
 <!-- Catálogo -->
 <div id="joyas" style="margin-bottom: 70px;" class="card">
