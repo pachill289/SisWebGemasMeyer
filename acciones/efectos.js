@@ -1,8 +1,19 @@
 var condicionClave = false;
-window.onload = () =>
-{
+document.addEventListener('DOMContentLoaded', function() {
     $("#iconoClave2").hide();
-}
+});
+//Tiempo de carga de la página actual
+var startTime = new Date().getTime();
+window.addEventListener('load', function() {
+  var endTime = new Date().getTime();
+  var loadTime = endTime - startTime;
+  //Si página tarda mas de 2 segundos en cargar sale un mensaje de recomendación
+  if(loadTime >= 1500)
+  {
+    alert('Vaya 🤔, esta página tardo mas de lo previsto, es importante que no recargue varias veces la página si esta tardo mucho tiempo ya que esto puede afectar el rendimiento de nuestros servicios.');
+  }
+  console.log('La página tardó ' + loadTime/1000 + ' segundos en cargar.');
+});
 //funcionalidad para mostrar y ocultar una contraseña
 function mostrarClave (input)
 {

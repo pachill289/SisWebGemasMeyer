@@ -82,7 +82,7 @@
     
           // Verificar si la solicitud fue exitosa
           if ($response !== false) {
-            header('Location:index.php');
+            alertAviso("Mensaje","Producto registrado con éxito ✅","Aceptar");
             // Procesar la respuesta de la API aquí
           } else {
             $httpCode = http_response_code();

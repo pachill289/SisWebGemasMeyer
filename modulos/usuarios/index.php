@@ -58,18 +58,17 @@
     //Anular a un usaurio por el ci por el método PUT personalizado
     if (isset($_GET['ciAnu'])) {
 
-        $url = "http://apijoyeriav2.somee.com/api/Usuario/AnularUsuarioWeb/".$_GET['ciAnu'];
-
+        $url = "https://apijoyeriav2.somee.com/api/Usuario/AnularUsuarioWeb/".$_GET['ciAnu'];
+        echo $url;
         // Inicializar cURL
         $ch = curl_init($url);
 
         // Configurar la solicitud PUT y otros ajustes necesarios
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // Establecer el encabezado "Content-Length" si se trata de un solo dato
-        $contentLength = strlen($_GET['ciAnu']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Length: ' . $contentLength
+            'Content-Type: application/json'
         ));
         // Ejecutar la solicitud y obtener la respuesta
         $response = curl_exec($ch);
@@ -90,22 +89,22 @@
             alertAviso("Mensaje","Usuario anulado con éxito ✅","Aceptar");
         } else {
             echo 'Error en la solicitud PUT. Código de respuesta: ' . $httpCode;
+            echo $response;
         }
     }
     if (isset($_GET['ciAct'])) {
 
-        $url = "http://apijoyeriav2.somee.com/api/Usuario/ActivarUsuarioWeb/".$_GET['ciAct'];
+        $url = "https://apijoyeriav2.somee.com/api/Usuario/ActivarUsuarioWeb/".$_GET['ciAct'];
 
         // Inicializar cURL
         $ch = curl_init($url);
 
         // Configurar la solicitud PUT y otros ajustes necesarios
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // Establecer el encabezado "Content-Length"
-        $contentLength = strlen($_GET['ciAct']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Length: ' . $contentLength
+            'Content-Type: application/json'
         ));
         // Ejecutar la solicitud y obtener la respuesta
         $response = curl_exec($ch);

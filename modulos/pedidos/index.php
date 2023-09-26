@@ -69,14 +69,18 @@
         //Anular pedido
         if (isset($_GET['idAnular'])) {
 
-            $url = "http://apijoyeriav2.somee.com/api/UsuarioPedido/AnularPedido/".$_GET['idAnular'];
+            $url = "https://apijoyeriav2.somee.com/api/UsuarioPedido/AnularPedido/".$_GET['idAnular'];
     
             // Inicializar cURL
             $ch = curl_init($url);
     
             // Configurar la solicitud PUT y otros ajustes necesarios
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json'
+            ));
             // Establecer el encabezado "Content-Length" si se trata de un solo dato
             $contentLength = strlen($_GET['idAnular']);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(

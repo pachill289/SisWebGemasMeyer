@@ -66,7 +66,7 @@
           $jsonData = json_encode($datosProducto,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
           //print_r($jsonData);
           // URL de la API
-          $url = "http://apijoyeriav2.somee.com/api/Producto/ActualizarProducto/{$productoId}";
+          $url = "https://apijoyeriav2.somee.com/api/Producto/ActualizarProducto/{$productoId}";
           // Inicializar cURL
         $ch = curl_init($url);
         

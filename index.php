@@ -292,7 +292,6 @@ if ($_POST) {
 
 <div class="mb-3">
     <label class="visually-hidden" for="inputName">Hidden input label</label>
-
 </div>
 <?php include('plantillas/header.php'); ?>
 <nav style="width:100%;z-index:9999;" class="navbar navbar-expand navbar-light bg-light sticky-top">
@@ -326,7 +325,7 @@ if ($_POST) {
     </div>
 </div>
 <div style="overflow-y: auto;  max-height: 500px;" class="bg-light rounded-3">
-    <?php foreach($publicaciones->publicaciones as $publicacion) {?>
+    <?php foreach($publicaciones->publicaciones as $publicacion) { if($publicacion->estado == 1) {?>
     <div style="display:inline;">
         <img style="width: 1115px;max-width:max-content; height:300px;padding:10px;" src=<?php echo $publicacion->imagen ?> alt="Imagen no disponible">
         <h3 style="padding:10px;"><?php echo $publicacion->titulo ?></h3>
@@ -334,7 +333,8 @@ if ($_POST) {
             <textarea readonly class="form-control" rows="3"><?php echo $publicacion->descripcion ?></textarea>
         </div>
     </div>
-    <?php }?>
+    <?php }
+    }?>
 </div>
 <!-- Catálogo -->
 <div id="joyas" style="margin-bottom: 70px;" class="card">

@@ -16,7 +16,7 @@
       $jsonData = json_encode($datosUsuario);
 
       // URL de la API
-      $url = "http://apijoyeriav2.somee.com/api/Usuario/RegistrarUsuario";
+      $url = "https://apijoyeriav2.somee.com/api/Usuario/RegistrarUsuario";
 
       // Configurar el flujo de contexto
       $context = stream_context_create(array(

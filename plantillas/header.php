@@ -36,6 +36,7 @@
     <!-- Archivos javascript -->
     <script type="text/javascript" src="<?php echo $url_base;?>acciones/validacionUsuario.js"></script>
     <script type="text/javascript" src="<?php echo $url_base;?>acciones/validacionProducto.js"></script>
+    <script type="text/javascript" src="<?php echo $url_base;?>acciones/validacionPublicacion.js"></script>
     <script type="text/javascript" src="<?php echo $url_base;?>acciones/efectos.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -98,6 +99,14 @@
                 <?php if(isset($usuarioSesion)) {
                     if($usuarioSesion->tipo == 1 || $usuarioSesion->tipo == 2) {
                     ?>
+                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/publicaciones/">Publicaciones <i class="bi bi-send"></i></a>
+                <?php }
+                }?>
+            </li>
+            <li class="nav-item">
+                <?php if(isset($usuarioSesion)) {
+                    if($usuarioSesion->tipo == 1 || $usuarioSesion->tipo == 2) {
+                    ?>
                 <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/pedidos/">Pedidos <i class="bi bi-handbag-fill"></i></a>
                 <?php }
                 }?>
@@ -109,6 +118,7 @@
                 else
                 {
                     echo "<h6><b>Bienvenido: $usuarioSesion->nombreCompleto</b></h6>";
+                    echo "<a style='margin-left: 30px;' class='btn btn-danger' href='".$url_base."/logout.php'>Cerrar sesión <i class='bi bi-door-closed-fill'></i></a>";
                 }?>
                 <?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 3) {?>
                 <div style="z-index: 99999;" class="dropdown open">
@@ -120,11 +130,6 @@
                         <a class="dropdown-item" href="#">Ver carrito</a>
                     </div>
                 </div>
-                <?php }?>
-            </li>
-            <li class="nav-item">
-                <?php if(isset($usuarioSesion)) {?>
-                <a style="margin-left: 30px;" class="btn btn-danger" href="<?php echo $url_base;?>/logout.php">Cerrar sesión <i class="bi bi-door-closed-fill"></i></a>
                 <?php }?>
             </li>
             <!-- Carrito de compras -->
