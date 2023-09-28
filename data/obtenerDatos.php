@@ -1,15 +1,13 @@
 <?php
+require_once 'constantes.php';
 /**
 * Esta función obtiene endpoints desde una url de una API de tipo http
 */
 function construirEndpoint($categoria, $subcategoria) {
 
-    $baseURL = 'https://apijoyeriav2.somee.com';
-
     $endpoint = "/api/$categoria/$subcategoria";
 
-    // Construir la URL completa del endpoint
-    $url = $baseURL . $endpoint;
+    $url = URL_API.$endpoint;
 
     //encabezado
     $opciones = [
