@@ -19,7 +19,7 @@
         $html = "
         <!-- Modal Body -->
         <div class='modal fade' id='modalId' tabindex='-1' role='dialog' aria-labelledby='modalTitleId' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm' role='document'>
+            <div class='modal-dialog modal-dialog-top modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h5 class='modal-title' id='modalTitleId'>$titulo</h5>

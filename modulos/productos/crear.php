@@ -2,6 +2,8 @@
   <?php
     //API Google drive uso de composer
     require_once '../../componentes/componentesHtml.php';
+    require_once '../../models/Productos.php';
+    require_once '../../data/obtenerDatos.php';
     require_once '../../data/googleDriveAPI.php';
     require_once '../../data/registrarDatos.php';
     require_once '../../data/constantes.php';
@@ -21,6 +23,7 @@
       //Subir y cargar imagen desde GOOGLE DRIVE
       try
       {
+        $productoExistente = false;
         // Obtener información de la imagen subida
         $file = $_FILES['imagen'];
         // Verificar si se cargó correctamente
@@ -33,24 +36,50 @@
             if(!verifyFileInFolder($fileName,GOOGLE_DRIVE_FOLDER_ID,$googleDriveSerive)) {
               // Crear un archivo en Google Drive
               $urlImagen = CreateFileInFolderGetImgUrl($fileName,GOOGLE_DRIVE_FOLDER_ID,$filePath,$googleDriveSerive);
-              //Subir datos a la API
-              // Datos del body
-              $datosProducto = array(
-                "nombre" => $_POST['nombre'],
-                "precio" => intval($_POST['precio']),
-                "cantidad" => intval($_POST['cantidad']),
-                "imagen" => $urlImagen,
-              );
-              //var_dump($datosProducto);
-              registrarDatos($datosProducto,'Producto','RegistrarProducto');
+              //Verificar si el producto ya existe
+              foreach (construirEndpoint('Producto', 'ObtenerProductos') as $producto) {
+                if ($producto->nombre == $_POST['nombre']) {
+                    $productoExistente = true;
+                }
+              }
+              if($productoExistente == false)
+              {
+                //Subir datos a la API
+                // Datos del body
+                $datosProducto = array(
+                  "idProducto" => 0,
+                  "nombre" => $_POST['nombre'],
+                  "descripcion" => "",
+                  "precio" => $_POST['precio'],
+                  "cantidad" => $_POST['cantidad'],
+                  "categoria" => "",
+                  "imagen" => $_POST['imagen_seleccionada'],
+                  "estado" => 0
+                );
+                //var_dump($datosProducto);
+                registrarDatos($datosProducto,'Producto','RegistrarProducto');
+              }
+              else
+              {
+                alert("Aviso","El nombre del producto ya existe, vuelva a intentarlo.","Aceptar");
+              }
+              
             }
           } else {
             // Mostrar un mensaje de error en caso de fallo en la carga
-            echo 'Error al subir el archivo.';
+            alert("Aviso","Suba o seleccione una imagen","Aceptar");
           }
         }
         else
         {
+          //Verificar si el producto ya existe
+          foreach (construirEndpoint('Producto', 'ObtenerProductos') as $producto) {
+            if ($producto->nombre == $_POST['nombre']) {
+                $productoExistente = true;
+            }
+          }
+          if($productoExistente == false)
+          {
           $datosProducto = array(
                 "idProducto" => 0,
                 "nombre" => $_POST['nombre'],
@@ -62,6 +91,11 @@
                 "estado" => 0
               );
           registrarDatos($datosProducto,'Producto','RegistrarProducto');
+          }
+          else
+          {
+            alert("Aviso","El nombre del producto ya existe,vuelva a intentarlo","Aceptar");
+          }
         }
       }catch(Google_Service_Exception $gs){
           $mensaje = json_decode($gs->getMessage());

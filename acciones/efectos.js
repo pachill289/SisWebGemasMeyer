@@ -8,7 +8,7 @@ window.addEventListener('load', function() {
   var endTime = new Date().getTime();
   var loadTime = endTime - startTime;
   //Si página tarda mas de 2 segundos en cargar sale un mensaje de recomendación
-  if(loadTime >= 1500)
+  if(loadTime >= 3500)
   {
     alert('Vaya 🤔, esta página tardo mas de lo previsto, es importante que no recargue varias veces la página si esta tardo mucho tiempo ya que esto puede afectar el rendimiento de nuestros servicios.');
   }
