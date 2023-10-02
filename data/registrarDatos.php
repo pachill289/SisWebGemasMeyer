@@ -11,7 +11,7 @@ require_once '../../data/constantes.php';
  * @param string $categoria La categoría a la que pertenece el producto en la API.
  * @param string $subcategoria La subcategoría a la que pertenece el producto en la API.
  */
-function registrarDatos($datos, $categoria, $subcategoria)
+function registrarDatos($datos, $categoria, $subcategoria,$mensaje)
 {
     $endpoint = "/api/$categoria/$subcategoria";
     $url = URL_API . $endpoint;
@@ -35,7 +35,7 @@ function registrarDatos($datos, $categoria, $subcategoria)
     // Verificar si la solicitud fue exitosa
     if ($response !== false) {
         // Procesar la respuesta de la API aquí
-        alertAviso("Mensaje", "Producto registrado con éxito ✅", "Aceptar");
+        alertAviso("Mensaje",$mensaje, "Aceptar");
     } else {
         // Manejar el error de la API aquí
         $httpCode = http_response_code();

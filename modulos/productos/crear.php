@@ -33,6 +33,7 @@
             // Obtener el nombre y la ruta temporal del archivo
             $fileName = $file['name'];
             $filePath = $file['tmp_name'];
+            //Verficar si el archivo seleccionado esta presente en la carpeta de google drive
             if(!verifyFileInFolder($fileName,GOOGLE_DRIVE_FOLDER_ID,$googleDriveSerive)) {
               // Crear un archivo en Google Drive
               $urlImagen = CreateFileInFolderGetImgUrl($fileName,GOOGLE_DRIVE_FOLDER_ID,$filePath,$googleDriveSerive);
@@ -53,11 +54,11 @@
                   "precio" => $_POST['precio'],
                   "cantidad" => $_POST['cantidad'],
                   "categoria" => "",
-                  "imagen" => $_POST['imagen_seleccionada'],
+                  "imagen" => $urlImagen,
                   "estado" => 0
                 );
                 //var_dump($datosProducto);
-                registrarDatos($datosProducto,'Producto','RegistrarProducto');
+                registrarDatos($datosProducto,'Producto','RegistrarProducto',"Producto registrado con éxito");
               }
               else
               {
@@ -83,14 +84,14 @@
           $datosProducto = array(
                 "idProducto" => 0,
                 "nombre" => $_POST['nombre'],
-                "descripcion" => "",
+                "descripcion" => $_POST['descripcion'],
                 "precio" => $_POST['precio'],
                 "cantidad" => $_POST['cantidad'],
                 "categoria" => "",
                 "imagen" => $_POST['imagen_seleccionada'],
                 "estado" => 0
               );
-          registrarDatos($datosProducto,'Producto','RegistrarProducto');
+          registrarDatos($datosProducto,'Producto','RegistrarProducto',"Producto registrado con éxito");
           }
           else
           {
@@ -139,7 +140,7 @@
                   <small id="helpCantidad" class="form-text">La cantidad debe ser mayor o igual a 0.</small>
                   <br/>
                   <div id="imagenSelection">
-                  <label for="imagen" class="form-label">Escoger una imagen y subirla a google drive</label> <i class="bi bi-google"></i>
+                  <label for="imagen" class="form-label">Escoger una imagen y subirla:</label>
                   <input id="seleccionNuevaImagen" type="file" accept=".jpg, .png" class="form-control" name="imagen" placeholder="Seleccione una imagen válida de tipo .jpg o .png" aria-describedby="ImagenHelpId">
                   <div id="ImagenHelpId" class="form-text">Seleccione una imagen válida de tipo .jpg o .png y que no sea muy grande (máximo de 1024x1024 píxeles).</div>
                   </div>

@@ -1,46 +1,37 @@
 <?php
+  require_once('../../models/Usuarios.php');
+  require_once('../../data/registrarDatos.php');
+  require_once('../../data/obtenerDatos.php');
+  require_once('../../componentes/componentesHtml.php');
+  $usuarioExistente = false;
     //Verificar registro/añadir nuevo usuario mediante a la API
     if($_POST)
     {
-      // Datos del body
-      $datosUsuario = array(
-        "ci" => $_POST['ci'],
-        "clave" => $_POST['clave'],
-        "correo" => $_POST['correo'],
-        "tipo" => $_POST['tipo'],
-        "estado" => $_POST['estado'],
-        "nombreCompleto" => $_POST['nombreCompleto']
-      );
-
-      // Convertir el body a formato JSON
-      $jsonData = json_encode($datosUsuario);
-
-      // URL de la API
-      $url = "https://apijoyeriav2.somee.com/api/Usuario/RegistrarUsuario";
-
-      // Configurar el flujo de contexto
-      $context = stream_context_create(array(
-        'http' => array(
-            'method' => 'POST',
-            'header' => 'Content-Type: application/json',
-            'content' => $jsonData
-        )
-      ));
-
-      // Realizar la solicitud POST
-      $response = file_get_contents($url, false, $context);
-
-      // Verificar si la solicitud fue exitosa
-      if ($response !== false) {
-        header('Location:index.php');
-        // Procesar la respuesta de la API aquí
-      } else {
-        $httpCode = http_response_code();
-        echo "Error en la solicitud, el usuario no se pudo registrar por un error: $httpCode";
-        // Manejar el error de la API aquí
+      //Verificar si el producto ya existe
+       foreach (construirEndpoint('Usuario', 'ObtenerUsuarios') as $usuario) {
+        if ($usuario->ci == $_POST['ci']) {
+            $usuarioExistente = true;
+        }
+      }
+      if(!$usuarioExistente)
+      {
+        // Datos del body
+        $datosUsuario = array(
+          "ci" => $_POST['ci'],
+          "clave" => $_POST['clave'],
+          "correo" => $_POST['correo'],
+          "tipo" => $_POST['tipo'],
+          "estado" => $_POST['estado'],
+          "nombreCompleto" => $_POST['nombreCompleto']
+        );
+        registrarDatos($datosUsuario,'Usuario','RegistrarUsuario','Usuario registrado con éxito');
+      }
+      else
+      {
+        alert("Aviso ⚠","El usuario ya existe,vuelva a intentarlo","Aceptar");
       }
     }
-            ?>
+?>
 <?php include('../../plantillas/header.php');?>
     <h4>Registrar nuevo usuario</h4>
     <div class="card">
@@ -94,9 +85,6 @@
                 <button type="submit" class="btn btn-success">Registrar usuario</button>
                 <a name="" id="" class="btn btn-danger" href="index.php" role="button">Cancelar</a>
             </form>
-        </div>
-        <div class="card-footer text-muted">
-            
         </div>
     </div>
 <?php include('../../plantillas/footer.php');?>
