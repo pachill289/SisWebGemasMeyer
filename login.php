@@ -6,7 +6,7 @@ require_once('data/obtenerDatos.php');
 require_once('models/Usuarios.php');
 require_once('models/ComprasCarrito.php');
 session_start();
-$url_base = "http://localhost:8080/SisWebGemasMeyer/modulos/productos/";
+$url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
 //$url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
  //Agregar a todos los usuarios desde la API
  $usuarios = new Usuarios();

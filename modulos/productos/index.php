@@ -2,48 +2,6 @@
 <?php
     require_once('../../data/obtenerDatos.php');
     require_once('../../models/Productos.php');
-    //API Google drive uso de composer
-    require_once '../../vendor/autoload.php';
-    //Es necesario actualizar la cuenta de servicio de google si esta ha caducado,la misma caduca el 31 de diciembre de 2023
-
-    putenv('GOOGLE_APPLICATION_CREDENTIALS=../../data/webgemasmeyer-2670159b89b9.json');
-    //Definir el servicio de google
-    $client = new Google_Client();
-    $client->useApplicationDefaultCredentials();
-    //$client->setScopes(['https://www.googleapis.com/auth/drive.file']);
-    $client->addScope(Google_Service_Drive::DRIVE);
-    //API key (opcional si se usa AuthO): AIzaSyBfPk0hwW5WmPEtkOTdJlIN7XEb283BgIM
-    
-    //Uso de google drive
-    //usa este id para determinar la carpeta de google drive
-    $folderId = '1ibwNXkd6YS-YIj7n45Jxd3wvl8AFjhb1';
-    //Listar imagenes
-    try{
-        
-        $service = new Google_Service_Drive($client);
-
-        $resultado = $service->files->listFiles();
-        /*Mostrar las imagenes
-        foreach ($resultado->getFiles() as $elemento) {
-            // Obtener la URL pública de la imagen
-            $imageUrl = 'https://drive.google.com/uc?id=' . $elemento->getId();
-            
-            // Mostrar la imagen en una etiqueta img
-            echo '<img width=150 height=150 src="' . $imageUrl . '>" <br/>';
-            echo "<p>$elemento->name</p>";
-        }*/
-
-    }catch(Google_Service_Exception $gs){
-        $mensaje = json_decode($gs->getMessage());
-        echo $mensaje->error->message;
-    }catch(Exception $e)
-    {
-        echo $e->getMessage();
-    }
-    /*foreach ($imageFiles as $imageId) {
-        $imageUrl = "mostrar_imagen.php?id=" . $imageId;
-        echo '<img src="' . $imageUrl . '" alt="Imagen">';
-    }   */ 
     $subCategoria = 'ObtenerProductos';
     if (isset($_POST['botonListar'])) {
         $subCategoria = 'ObtenerProductos';

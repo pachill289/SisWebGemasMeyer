@@ -19,7 +19,7 @@
         $html = "
         <!-- Modal Body -->
         <div class='modal fade' id='modalId' tabindex='-1' role='dialog' aria-labelledby='modalTitleId' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm' role='document'>
+            <div class='modal-dialog modal-dialog-top modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h5 class='modal-title' id='modalTitleId'>$titulo</h5>
@@ -48,18 +48,18 @@
     function alertAviso($titulo,$texto,$txtAceptar) {
         $html = "
         <!-- Modal Body -->
-        <div style='z-index: 99999;' class='modal fade' id='modalId' tabindex='-1' role='dialog' aria-labelledby='modalTitleId' aria-hidden='true'>
+        <div style='z-index: 99999;' data-bs-backdrop='static' data-bs-keyboard='false' class='modal fade' id='modalId' tabindex='-1' role='dialog' aria-labelledby='modalTitleId' aria-hidden='true'>
             <div class='modal-dialog modal-dialog-scrollable modal-dialog-top modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h5 class='modal-title' id='modalTitleId'>$titulo</h5>
-                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                        <button onclick='recargarPagina()' type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                     </div>
                     <div class='modal-body'>
                         $texto
                     </div>
                     <div class='modal-footer'>
-                        <a type='button' href='#' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</a>
+                        <a onclick='recargarPagina()' type='button' href='#' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</a>
                     </div>
                 </div>
             </div>
@@ -69,13 +69,14 @@
             document.addEventListener('DOMContentLoaded', function() {
                 var myModal = new bootstrap.Modal(document.getElementById('modalId'));
                 myModal.show();
-
-                // Agregar evento de clic al botón 'Aceptar'
-                var btnAceptar = document.querySelectorAll('#modalId .modal-footer button')[0];
-                btnAceptar.addEventListener('click', function() {
+                setInterval(function() {
                     window.location.href = 'index.php';
-                });
+                }, 5000);
             });
+            function recargarPagina()
+            {
+                window.location.href = 'index.php';
+            }
         </script>";
     
         echo $html;

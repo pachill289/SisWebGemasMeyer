@@ -11,7 +11,7 @@
         "nombreCompleto" => $_POST['nombreCompleto']
       );
       //Uso del método PUT personalizado en php con curl
-      $url = "http://apijoyeriav2.somee.com/api/Usuario/ActualizarUsuario";
+      $url = "https://apijoyeriav2.somee.com/api/Usuario/ActualizarUsuario";
 
       // Inicializar cURL
       $ch = curl_init($url);
