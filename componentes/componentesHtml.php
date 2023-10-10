@@ -14,6 +14,14 @@
         $margen .= 'px';
         echo "<p style=\"margin: $margen;border: 1px solid black;\">Hola</p>";
     }
+    //popover
+    function popOver ()
+    {
+        $html = "<div style='width: 300px;' id='prueba' popover>
+                    <p>Hola</p>
+                </div>";
+        echo $html;
+    }
     //componentes de bootstrap
     function alert($titulo,$texto,$txtAceptar) {
         $html = "

@@ -22,6 +22,53 @@
             $pedido->fecha_expiracion
          ));
      }
+    //Verificar si un pedido ha expirado
+    $hoy = new DateTime();
+    $pedidosExpirados = 0;
+    $pedidosActivos = 0;
+    $validez = true;
+    if(count($pedidos->pedidos))
+    {
+        foreach ($pedidos->pedidos as $pedido) { 
+            $fechaInicio = new DateTime($pedido->fecha);
+            $fechaExpiracion = new DateTime($pedido->fecha_expiracion);
+            if ($hoy >= $fechaInicio && $hoy <= $fechaExpiracion) {
+                //echo "El pedido está dentro del plazo de validez.";
+                $pedidosActivos++;
+                alert("Pedidos pendientes","Número de pedidos pendientes: ".$pedidosActivos,"Aceptar");
+            } else {
+                if($pedido->estado == 3)
+                {
+                    $url = "https://apijoyeriav2.somee.com/api/UsuarioPedido/AnularPedido/".$pedido->idPedido;
+                    // Inicializar cURL
+                    $ch = curl_init($url);
+                    // Configurar la solicitud PUT y otros ajustes necesarios
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json'
+                    ));
+                    // Ejecutar la solicitud y obtener la respuesta
+                    $response = curl_exec($ch);
+                    // Verificar si hubo algún error
+                    if ($response === false) {
+                        echo 'Error: ' . curl_error($ch);
+                    }
+                    // Obtener el código de respuesta HTTP
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    // Cerrar la conexión cURL
+                    curl_close($ch);
+                    // Procesar la respuesta
+                    if ($httpCode != 200) {
+                        echo 'Error en la solicitud PUT. Código de respuesta: ' . $httpCode;
+                    }              
+                    $pedidosExpirados++;
+                    alertAviso("Pedidos que han expirado",$pedidosExpirados." pedidos han expirado.","Aceptar");
+                }
+            }
+        }
+    }
     //Limpieza manual
     //Verificar si no existe ningún pedido para deshabilitar el botón para borrar todos los pedidos
     $pedidosTotales = 0;

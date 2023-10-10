@@ -81,6 +81,7 @@
 <?php
 
 require('componentes/componentesHtml.php');
+require('componentes/functionUtilities.php');
 //obtener los prodcutos en stock
 require_once('data/obtenerDatos.php');
 require_once('models/Productos.php');
@@ -307,11 +308,10 @@ if ($_POST) {
     }
 }
 ?>
-
+<?php include('plantillas/header.php'); ?>
 <div class="mb-3">
     <label class="visually-hidden" for="inputName">Hidden input label</label>
 </div>
-<?php include('plantillas/header.php'); ?>
 <nav style="width:100%;z-index:9999;" class="navbar navbar-expand navbar-light bg-light sticky-top">
     <div class="container">
         <div class="collapse navbar-collapse" id="collapsibleNavId">
@@ -396,7 +396,8 @@ if ($_POST) {
                         </div>
                         <?php espacio_br(1) ?>
                         <button type="submit" class="btn btn-primary">Filtrar 🔍</button>
-                        <button type="button" onclick="limpiarFiltros()" class="btn btn-danger">Limpiar Filtros 🧹</button>
+                        <button type="button" onclick=<?php echo (sendJsArgs("limpiarFiltros",$precioMinimo,$precioMaximo))?> class="btn btn-danger">Limpiar Filtros 🧹</button>
+
 
                         <script>
                             const range = document.querySelectorAll('.range-slider input');
@@ -428,13 +429,14 @@ if ($_POST) {
                             });
                         </script>
                         <script>
-                            function limpiarFiltros() {
+                            function limpiarFiltros(precioMin,precioMax) {
                                 // Restablecer los campos de búsqueda y filtros
                                 document.getElementById('nombreProducto').value = '';
-                                document.getElementById('inputPrecioMin').value = '304'; // Valor mínimo
-                                document.getElementById('inputPrecioMax').value = '14000'; // Valor máximo
-                                document.getElementById('customRange1').value = '304'; // Valor mínimo del rango
-                                document.getElementById('customRange2').value = '14000'; // Valor máximo del rango
+                                document.getElementById('inputPrecioMin').value = precioMin; // Valor mínimo
+                                document.getElementById('inputPrecioMax').value = precioMax; // Valor máximo
+                                document.getElementById('customRange1').value = precioMin; // Valor mínimo del rango
+                                document.getElementById('customRange2').value = precioMax; // Valor máximo del rango
+
                                 // Enviar el formulario para actualizar la página
                                 document.getElementById('filtroForm').submit();
                             }
