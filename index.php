@@ -398,7 +398,6 @@ if ($_POST) {
                         <button type="submit" class="btn btn-primary">Filtrar 🔍</button>
                         <button type="button" onclick=<?php echo (sendJsArgs("limpiarFiltros",$precioMinimo,$precioMaximo))?> class="btn btn-danger">Limpiar Filtros 🧹</button>
 
-
                         <script>
                             const range = document.querySelectorAll('.range-slider input');
                             const progress = document.querySelector('.range-slider .progress');
@@ -436,7 +435,6 @@ if ($_POST) {
                                 document.getElementById('inputPrecioMax').value = precioMax; // Valor máximo
                                 document.getElementById('customRange1').value = precioMin; // Valor mínimo del rango
                                 document.getElementById('customRange2').value = precioMax; // Valor máximo del rango
-
                                 // Enviar el formulario para actualizar la página
                                 document.getElementById('filtroForm').submit();
                             }
