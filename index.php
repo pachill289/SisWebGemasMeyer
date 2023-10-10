@@ -81,6 +81,7 @@
 <?php
 
 require('componentes/componentesHtml.php');
+require('componentes/functionUtilities.php');
 //obtener los prodcutos en stock
 require_once('data/obtenerDatos.php');
 require_once('models/Productos.php');
@@ -107,6 +108,24 @@ foreach (construirEndpoint('UsuarioPublicacion', 'ObtenerPublicaciones') as $pub
         $publicacion->estado,
         $publicacion->tipo
     ));
+}
+//Obtener un pre
+$precioMaximo = 0; $count = 1;
+foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+    if($count == 1)
+    {
+        $precioMinimo = $producto->precio;
+    }
+}
+foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
+    if($producto->precio < $precioMinimo)
+    {
+        $precioMinimo = $producto->precio; 
+    }
+    if($producto->precio > $precioMaximo)
+    {
+        $precioMaximo = $producto->precio; 
+    }
 }
 //Validación compra
 if ($_POST) {
@@ -224,7 +243,6 @@ if ($_POST) {
     
         // Redirigir de nuevo al carrito o a donde desees
         alertAviso("Mensaje", "Producto eliminado", "Aceptar");
-        header("Location:index.php");
     }
     //filtrado
     if (isset($_POST['precioMin']) && isset($_POST['precioMax'])) {
@@ -239,8 +257,9 @@ if ($_POST) {
                     $producto->estado,
                     $producto->imagen,
                     $producto->categoria
-                ));
+            ));
         }
+        //var_dump($productos);
         if (count($productos->productos) == 0) {
             alertAviso("Mensaje ⚠", "Lo sentimos no pudimos encontrar ningún producto que este en ese rango de precios, por favor vuelva a filtrar por el precio", "Aceptar");
         }
@@ -289,11 +308,10 @@ if ($_POST) {
     }
 }
 ?>
-
+<?php include('plantillas/header.php'); ?>
 <div class="mb-3">
     <label class="visually-hidden" for="inputName">Hidden input label</label>
 </div>
-<?php include('plantillas/header.php'); ?>
 <nav style="width:100%;z-index:9999;" class="navbar navbar-expand navbar-light bg-light sticky-top">
     <div class="container">
         <div class="collapse navbar-collapse" id="collapsibleNavId">
@@ -361,26 +379,24 @@ if ($_POST) {
                         <?php espacio_br(1) ?>
                         <div class="containerSli">
                             <div class="min-value numberVal" style="display: inline-flex; margin-right: 25px; margin-left: 5px;">
-                                <label>Mínimo </label>
-                                <input name="precioMin" type="number" onchange="valorInput(this.value)" value=<?php echo (isset($_POST['precioMin']) ? $_POST['precioMin'] : "304") ?> min="304" max="14000" id="inputPrecioMin" aria-describedby="helpId" style="text-align: center;font-size:medium;">
+                                <label>Mínimo: </label>
+                                <input name="precioMin" readonly type="number" onchange="valorInput(this.value,<?php echo($precioMaximo) ?>,<?php echo($precioMaximo) ?>)" value=<?php echo (isset($_POST['precioMin']) ? $_POST['precioMin'] : $precioMinimo) ?> id="inputPrecioMin" aria-describedby="helpId" style="text-align: center;font-size:medium;">
                             </div>
                             <div class="max-value numberVal" style="text-align: right; display: inline-flex;">
-                                <label for="">Máximo </label>
-                                <input name="precioMax" type="number" onchange="valorInput2(this.value)" max="14000" min="577" value=<?php echo (isset($_POST['precioMax']) ? $_POST['precioMax'] : "14000") ?> id="inputPrecioMax" aria-describedby="helpId" style="text-align: center;font-size:10px;font-size:medium;">
+                                <label for="">Máximo: </label>
+                                <input name="precioMax" readonly type="number" onchange="valorInput2(this.value,<?php echo($precioMaximo) ?>,<?php echo($precioMaximo) ?>)" value=<?php echo (isset($_POST['precioMax']) ? $_POST['precioMax'] : $precioMaximo) ?> id="inputPrecioMax" aria-describedby="helpId" style="text-align: center;font-size:10px;font-size:medium;">
                             </div>
                             <br>
                             &nbsp;
                             <div class="range-slider">
                                 <div class="progress"></div>
-                                <input name="sliderPrecios" onchange="valorRange(this.value)" type="range" min="304" max="14000" step="10" value=<?php echo (isset($_POST['precioMin']) ? $_POST['precioMin'] : "304") ?> class="range-min" id="customRange1" />
-
-                                <input name="sliderPrecios2" onchange="valorRange2(this.value)" type="range" min="577" max="14000" value=<?php echo (isset($_POST['precioMax']) ? $_POST['precioMax'] : "14000") ?> class="range-max" id="customRange2" />
+                                <input name="sliderPrecios" onchange="valorRange(this.value)" type="range" max=<?php echo($precioMaximo) ?> min=<?php echo($precioMinimo) ?> step="10" value=<?php echo (isset($_POST['precioMin']) ? $_POST['precioMin'] : $precioMinimo) ?> class="range-min" id="customRange1" />
+                                <input name="sliderPrecios2" onchange="valorRange2(this.value)" type="range" max=<?php echo($precioMaximo) ?> min=<?php echo($precioMinimo) ?> value=<?php echo (isset($_POST['precioMax']) ? $_POST['precioMax'] : $precioMaximo) ?> class="range-max" id="customRange2" />
                             </div>
                         </div>
                         <?php espacio_br(1) ?>
                         <button type="submit" class="btn btn-primary">Filtrar 🔍</button>
-                        <button type="button" onclick="limpiarFiltros()" class="btn btn-danger">Limpiar Filtros 🧹</button>
-
+                        <button type="button" onclick="<?php sendJsArgs("limpiarFiltros",$precioMinimo,$precioMaximo)?>" class="btn btn-danger">Limpiar Filtros 🧹</button>
 
                         <script>
                             const range = document.querySelectorAll('.range-slider input');
@@ -412,21 +428,17 @@ if ($_POST) {
                             });
                         </script>
                         <script>
-                            function limpiarFiltros() {
+                            function limpiarFiltros(precioMin,precioMax) {
                                 // Restablecer los campos de búsqueda y filtros
                                 document.getElementById('nombreProducto').value = '';
-                                document.getElementById('inputPrecioMin').value = '304'; // Valor mínimo
-                                document.getElementById('inputPrecioMax').value = '14000'; // Valor máximo
-                                document.getElementById('customRange1').value = '304'; // Valor mínimo del rango
-                                document.getElementById('customRange2').value = '14000'; // Valor máximo del rango
-
+                                document.getElementById('inputPrecioMin').value = precioMin; // Valor mínimo
+                                document.getElementById('inputPrecioMax').value = precioMax; // Valor máximo
+                                document.getElementById('customRange1').value = precioMin; // Valor mínimo del rango
+                                document.getElementById('customRange2').value = precioMax; // Valor máximo del rango
                                 // Enviar el formulario para actualizar la página
                                 document.getElementById('filtroForm').submit();
                             }
                         </script>
-
-
-
                     </form>
                 </div>
                 <h4>Categorías:</h4>
@@ -496,7 +508,7 @@ if ($_POST) {
     $productosMostrados = $productos->productos; // Por defecto, mostrar todos los productos
 
     // Verificar si se ha enviado el formulario de búsqueda por nombre
-    if ($_POST && isset($_POST['nombreProducto'])) {
+    if ($_POST && isset($_POST['nombreProducto']) && $_POST['nombreProducto'] != "") {
         $nombreBuscado = $_POST['nombreProducto'];
         $productosFiltrados = array();
 
@@ -514,12 +526,6 @@ if ($_POST) {
     // Mostrar los productos (ya sean todos o los filtrados)
     if (count($productosMostrados) == 0) {
         echo '<h1>No se encontró ningún producto,vuelva a intentarlo</h1>';
-        echo '<script>
-            document.getElementById("search-message").style.display = "block";
-            setTimeout(function(){
-                document.getElementById("search-message").style.display = "none";
-            }, 2000); // Mostrar durante 2 segundos
-        </script>';
     } else {
         foreach ($productosMostrados as $producto) {
     ?>

@@ -34,28 +34,30 @@ function mostrarClave (input)
 function valorRange (valor) {
     $("#inputPrecioMin").val(valor);
 }
-function valorInput (valor) {
-    if(valor>14000)
+function valorInput (valor,valorMin,valorMax) {
+    console.log(valor);
+    if(valor>valorMax)
     {
-        $("#inputPrecioMin").val(14000);
+        $("#inputPrecioMin").val(valorMax);
         $("#customRange1").val(valor);
     }
-    else if(valor<304){
-        $("#inputPrecioMin").val(304);
+    else if(valor<valorMin){
+        $("#inputPrecioMin").val(valorMin);
         $("#customRange1").val(valor);
     }
 }
 function valorRange2 (valor) {
     $("#inputPrecioMax").val(valor);
 }
-function valorInput2 (valor) {
-    if(valor>14000)
+function valorInput2 (valor,valorMin,valorMax) {
+    console.log(valor);
+    if(valor>valorMax)
     {
-        $("#inputPrecioMax").val(14000);
+        $("#inputPrecioMax").val(valorMax);
         $("#customRange2").val(valor);
     }
-    else if(valor<577){
-        $("#inputPrecioMax").val(577);
+    else if(valor<valorMin){
+        $("#inputPrecioMax").val(valorMin);
         $("#customRange2").val(valor);
     }
 }
