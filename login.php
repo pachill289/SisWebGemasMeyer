@@ -7,6 +7,8 @@ require_once('models/Usuarios.php');
 require_once('models/ComprasCarrito.php');
 session_start();
 $url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
+//url producción
+//$url_base = "http://pachill289-001-site1.htempurl.com/modulos/productos/";
 //$url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
  //Agregar a todos los usuarios desde la API
  $usuarios = new Usuarios();

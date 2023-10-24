@@ -1,7 +1,7 @@
 <?php
     //url base para desarrollo
     $url_base = "http://localhost:80/SisWebGemasMeyer/";
-    //$url_base = "http://gemas-meyer-demo.great-site.net/";
+    //$url_base = "http://pachill289-001-site1.htempurl.com/";
     if(isset($_COOKIE['usuario']))
     {
         $usuarioSesion = json_decode($_COOKIE['usuario']);
@@ -80,7 +80,9 @@
                 <?php if(isset($usuarioSesion)) {
                         if($usuarioSesion->tipo == 1 || $usuarioSesion->tipo == 2 && $usuarioSesion->estado == 1) {
                     ?>
-                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/productos/">Productos</a>
+                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/productos/">Productos <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003 6.97 2.789ZM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461L10.404 2Z"/>
+</svg></a>
                 <?php 
                         }
                     }?>
@@ -89,7 +91,9 @@
                 <?php if(isset($usuarioSesion)){
                         if($usuarioSesion->tipo == 1) {
                     ?>
-                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/usuarios/">Usuarios</a>
+                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/usuarios/">Usuarios <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-standing" viewBox="0 0 16 16">
+  <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM6 6.75v8.5a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2.75a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .5 0Z"/>
+</svg></a>
                 <?php }
                 }?>
             </li>
@@ -106,6 +110,18 @@
                     if($usuarioSesion->tipo == 1 || $usuarioSesion->tipo == 2) {
                     ?>
                 <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/pedidos/">Pedidos <i class="bi bi-handbag-fill"></i></a>
+                <?php }
+                }?>
+            </li>
+            <li class="nav-item">
+                <?php if(isset($usuarioSesion)) {
+                    if($usuarioSesion->tipo == 1 || $usuarioSesion->tipo == 2) {
+                    ?>
+                <a style="font-size: 22px;" class="nav-link" href="<?php echo $url_base;?>modulos/peticiones/">Peticiones 
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16">
+                <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a.998.998 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207Z"/>
+                <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>
+                </svg></a>
                 <?php }
                 }?>
             </li>

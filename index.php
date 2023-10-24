@@ -396,8 +396,7 @@ if ($_POST) {
                         </div>
                         <?php espacio_br(1) ?>
                         <button type="submit" class="btn btn-primary">Filtrar 🔍</button>
-                        <button type="button" onclick="limpiarFiltros()" class="btn btn-danger">Limpiar Filtros 🧹</button>
-
+                        <button type="button" onclick="<?php sendJsArgs("limpiarFiltros",$precioMinimo,$precioMaximo)?>" class="btn btn-danger">Limpiar Filtros 🧹</button>
 
                         <script>
                             const range = document.querySelectorAll('.range-slider input');
@@ -432,11 +431,10 @@ if ($_POST) {
                             function limpiarFiltros(precioMin,precioMax) {
                                 // Restablecer los campos de búsqueda y filtros
                                 document.getElementById('nombreProducto').value = '';
-                                document.getElementById('inputPrecioMin').value = '304'; // Valor mínimo
-                                document.getElementById('inputPrecioMax').value = '14000'; // Valor máximo
-                                document.getElementById('customRange1').value = '304'; // Valor mínimo del rango
-                                document.getElementById('customRange2').value = '14000'; // Valor máximo del rango
-
+                                document.getElementById('inputPrecioMin').value = precioMin; // Valor mínimo
+                                document.getElementById('inputPrecioMax').value = precioMax; // Valor máximo
+                                document.getElementById('customRange1').value = precioMin; // Valor mínimo del rango
+                                document.getElementById('customRange2').value = precioMax; // Valor máximo del rango
                                 // Enviar el formulario para actualizar la página
                                 document.getElementById('filtroForm').submit();
                             }
