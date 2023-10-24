@@ -220,6 +220,11 @@
                         <tr>
                             <td scope="row"><h4>Descripción: </h4><?php echo $publicacion->descripcion?></td>
                         </tr>
+                        <tr>
+                            <td>
+                                <h4>Tipo:</h4><h5><?php echo ($publicacion->tipo == 1? "Publicacion" : "Promocion") ?></h5>
+                            </td>
+                        </tr>
                         <?php if($publicacion->tipo == 2) { ?>
                         <tr>
                             <td>
@@ -237,6 +242,7 @@
                             </td>
                         </tr>
                         <?php } ?>
+                        
                         <tr style="border-bottom: solid black 3px;"></tr>
                     <?php $nroPublicacion++; } ?>
                     </tbody>
