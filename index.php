@@ -396,11 +396,7 @@ if ($_POST) {
                         </div>
                         <?php espacio_br(1) ?>
                         <button type="submit" class="btn btn-primary">Filtrar 🔍</button>
-<<<<<<< HEAD
                         <button type="button" onclick="<?php sendJsArgs("limpiarFiltros",$precioMinimo,$precioMaximo)?>" class="btn btn-danger">Limpiar Filtros 🧹</button>
-=======
-                        <button type="button" onclick=<?php echo (sendJsArgs("limpiarFiltros",$precioMinimo,$precioMaximo))?> class="btn btn-danger">Limpiar Filtros 🧹</button>
->>>>>>> 7cdf4049c0d1553394ffabefc4cf476f1a790b0f
 
                         <script>
                             const range = document.querySelectorAll('.range-slider input');
