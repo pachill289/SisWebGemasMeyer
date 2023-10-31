@@ -34,7 +34,8 @@
     }
     //Especificaciones
     if(isset($_GET['btnEsp'])){
-        alert("Especificaciones","<h5>Nombre del producto: </h5>".$_GET['txtNom']."<br>"."<h5> Caracteristicas: </h5>".$_GET['txtEsp'],"Aceptar");
+        alert("Especificaciones","<h5>Nombre del producto: </h5>".$_GET['txtNom']."<br>"."<h5> Características: </h5>".$_GET['txtEsp']."<br>"."<h5> Imagen: </h5> <br>".
+        "<img class='img-fluid' src='".$_GET['txtImagen']."' width='250' height='250'>","Aceptar");
         //$_GET['btnEsp'] = null;
     }
     //Notificacion via whatsapp con la API de ultramsg
@@ -195,7 +196,7 @@
                                 ?></td>
                             <td><?php echo $peticion->productoNombre?></td>
                             <td><?php echo $peticion->cantidad?></td>
-                            <td><a name="" id="" class="btn btn-primary" href="index.php?btnEsp=1&txtNom=<?php echo($peticion->productoNombre)?>&txtEsp=<?php echo($peticion->especificaciones)?>" role="button">Especificaciones <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                            <td><a name="" id="" class="btn btn-primary" href="index.php?btnEsp=1&txtNom=<?php echo($peticion->productoNombre)?>&txtEsp=<?php echo($peticion->especificaciones)?>&txtImagen=<?php echo ($peticion->imagen);?>" role="button">Especificaciones <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
                             <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
                             </svg></a></td>
