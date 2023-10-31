@@ -18,6 +18,7 @@ $url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
          $usuario->ci,
          $usuario->clave,
          $usuario->correo,
+         $usuario->celular,
          $usuario->tipo,
          $usuario->estado,
          $usuario->nombreCompleto

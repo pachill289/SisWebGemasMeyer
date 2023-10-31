@@ -10,7 +10,7 @@
     //Pedidos
     //Agregar a todos los pedidos desde la API
     $pedidos = new Pedidos();
-     
+    $verPedidosAnulados = false;
      foreach (construirEndpoint('UsuarioPedido', 'ObtenerPedidos') as $pedido) {
          $pedidos->agregarPedido(new Pedido(
             $pedido->idPedido,
@@ -105,6 +105,14 @@
         if(isset($_POST['btnBorrar2']))
         {
             alertAviso("Mensaje ⚠","No puede borrar todos los pedidos, porque tiene algunos pedidos pendientes o no es necesario realizar una limpieza","Aceptar");
+        }
+        if(isset($_POST['btnVerPedidosAnu']))
+        {
+            $verPedidosAnulados = true;
+        }
+        if(isset($_POST['btnVerPedidosPen']))
+        {
+            $verPedidosAnulados = false;
         }
     }
     //POR HACER PARA EL SPRINT 4
@@ -269,6 +277,7 @@
              $usuario->ci,
              $usuario->clave,
              $usuario->correo,
+             $usuario->celular,
              $usuario->tipo,
              $usuario->estado,
              $usuario->nombreCompleto
@@ -302,6 +311,15 @@
             Realizar limpieza manual de pedidos <i class="bi bi-trash-fill"></i>
         </button>
         <?php }?>
+        <?php if($verPedidosAnulados == false) {?>
+        <button name="btnVerPedidosAnu" title="Ver pedidos anulados" type="submit" class="btn btn-primary">
+            Ver pedidos anulados <i class="bi bi-eye-fill"></i>
+        </button>
+        <?php } else {?>
+            <button name="btnVerPedidosPen" title="Ver pedidos pendientes" type="submit" class="btn btn-primary">
+            Ver pedidos pendientes <i class="bi bi-eye-fill"></i>
+            </button>
+        <?php }?>
     </form>
     <div class="card">
         <div class="card-body">
@@ -321,7 +339,9 @@
                     </thead>
                     <tbody>
                         <!-- Obtener todos los pedidos -->
-                        <?php foreach ($pedidos->pedidos as $pedido) { 
+                        <?php if($verPedidosAnulados == false)
+                        {
+                             foreach ($pedidos->pedidos as $pedido) { 
                             if($pedido->estado == 1 || $pedido->estado == 3) { ?>
                         <tr class="">
                             <td scope="row"><?php echo $pedido->idPedido?></td>
@@ -373,7 +393,46 @@
                             </td>
                         </tr>
                         <?php } 
-                    }?>
+                    } } else {?>
+                    <?php foreach ($pedidos->pedidos as $pedido) { ?>
+                        <?php if($pedido->estado == 4) { ?>
+                        <tr class="">
+                            <td scope="row"><?php echo $pedido->idPedido?></td>
+                            <td><?php foreach ($usuarios->usuarios as $usuario) {
+                                    if($usuario->ci == $pedido->idUsuario)
+                                    {
+                                        echo $usuario->nombreCompleto;
+                                    }
+                                }
+                                ?></td>
+                            <td><?php foreach ($productos->productos as $producto) {
+                                    if($producto->id == $pedido->idProducto)
+                                    {
+                                        if($producto->cantidad == 0)
+                                        {
+                                            echo "<div class='alert alert-danger' role='alert'>¡Producto agotado!</div>";
+                                        }
+                                        else
+                                        {
+                                            echo $producto->nombre;
+                                        }
+                                    }
+                                }
+                                ?></td>
+                            <td><?php echo $pedido->cantidadProducto?></td>
+                            <td><?php echo ((new DateTime($pedido->fecha))->format('d-m-y'))?></td>
+                            <td><?php echo ((new DateTime($pedido->fecha_expiracion))->format('d-m-y'))?></td>
+                            <td><?php echo ($pedido->estado == 1 ? 
+                            "<div class='alert alert-success' role='alert'>ENTREGADO</div>" : 
+                            ($pedido->estado == 2 ? 
+                            "<div class='alert alert-danger' role='alert'>NO ENTREGADO</div>" : 
+                            ($pedido->estado == 3 ? 
+                            "<div class='alert alert-warning' role='alert'>PENDIENTE</div>": 
+                            "<div class='alert alert-secondary' role='alert'>ANULADO</div>"))) ?></td>
+                            <td>N/A</td>
+                        </tr>
+                    <?php } }?>
+                    <?php }?>
                     </tbody>
                 </table>
             </div>

@@ -4,14 +4,16 @@ class Usuario {
     public $ci;
     public $clave;
     public $correo;
+    public $celular;
     public $tipo;
     public $estado;
     public $nombreCompleto;
 
-    public function __construct($ci, $clave,$correo,$tipo,$estado,$nombreCompleto) {
+    public function __construct($ci, $clave,$correo,$celular,$tipo,$estado,$nombreCompleto) {
         $this->ci = $ci;
         $this->clave = $clave;
         $this->correo = $correo;
+        $this->celular = $celular;
         $this->tipo = $tipo;
         $this->estado = $estado;
         $this->nombreCompleto = $nombreCompleto;

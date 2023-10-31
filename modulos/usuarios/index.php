@@ -14,6 +14,7 @@
                 $usuario->ci,
                 $usuario->clave,
                 $usuario->correo,
+                $usuario->celular,
                 $usuario->tipo,
                 $usuario->estado,
                 $usuario->nombreCompleto
@@ -30,6 +31,7 @@
                 $usuario->ci,
                 $usuario->clave,
                 $usuario->correo,
+                $usuario->celular,
                 $usuario->tipo,
                 $usuario->estado,
                 $usuario->nombreCompleto
@@ -168,6 +170,7 @@
                             <th scope="col">Nombre completo</th>
                             <th scope="col">Clave</th>
                             <th scope="col">Correo</th>
+                            <th scope="col">Celular</th>
                             <th scope="col">Tipo</th>
                             <th scope="col">Estado</th>
                             <th class="text-center" scope="col">Acciones</th>
@@ -184,6 +187,7 @@
                                 <td><?php echo $usuario->nombreCompleto?></td>
                                 <td><?php echo $usuario->clave?></td>
                                 <td><?php echo $usuario->correo?></td>
+                                <td><?php echo ($usuario->celular != '' ? $usuario->celular : 'N/A')?></td>
                                 <td>
                                     <?php echo ($usuario->tipo == 1 ? "Administrador" : ($usuario->tipo == 2 ? "Vendedor" : "Cliente"))?>
                                 </td>
