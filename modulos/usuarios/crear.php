@@ -20,6 +20,7 @@
           "ci" => $_POST['ci'],
           "clave" => $_POST['clave'],
           "correo" => $_POST['correo'],
+          "celular" => $_POST['celular'],
           "tipo" => $_POST['tipo'],
           "estado" => $_POST['estado'],
           "nombreCompleto" => $_POST['nombreCompleto']
@@ -68,6 +69,11 @@
                   <input type="text"
                     class="form-control" name="correo" required pattern="^[\w\-]+(\.[\w\-]+)*@([\w\-]+\.)+[a-zA-Z]{2,3}$" id="correo" aria-describedby="helpCorreo" placeholder="Ingrese su correo electrónico" onchange="validarCorreo(this.value)">
                   <small id="helpCorreo" class="form-text">El correo electrónico debe contener almenos una @ y un dominio .com .es,etc..</small>
+                  <br/>
+                  <label for="correo" class="form-label">Celular:</label>
+                  <input type="number"
+                    class="form-control" name="celular" required pattern="^[67]\d{7}$" id="celular" aria-describedby="helpCelular" placeholder="Ingrese su celular" onchange="validarCelular(this.value)">
+                  <small id="helpCorreo" class="form-text">El celular debe empezar por 6 o 7 y debe contener 8 dígitos.</small>
                   <br/>
                   <div class="mb-3">
                     <label for="tipo" class="form-label">Tipo:</label>

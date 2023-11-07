@@ -89,5 +89,26 @@ function validarCorreo(value) {
     targetElement.text(texto);
   }
 }
+function validarCelular(value) {
+  function verificarCelular(clave) {
+      var regex = /^[67]\d{7}$/; // Expresión regular que verifica solo letras en mayúsculas y minúsculas
+      return regex.test(clave);
+  }
+  var targetElement = $("small").eq(4); // Acceder al primer elemento <small>
+  const texto = 'El celular debe empezar por 6 o 7 y debe contener 8 dígitos.';
+  if (verificarCelular(value)) {
+    targetElement.css("color", "green");
+    targetElement.text(textoCorrecto);
+  }
+  else if (value == "")
+  {
+    targetElement.css("color", "#b59410");
+    targetElement.text("Campo vacío ⚠");
+  }  
+  else {
+    targetElement.css("color", "red");
+    targetElement.text(texto);
+  }
+}
   
   

@@ -196,7 +196,7 @@
                                     ($usuario->estado == 1 ? "<div class='alert alert-primary' role='alert'>ACTIVO</div>" : "Eliminado"))?>
                                 </td>
                                 <td class="text-center">
-                                    <a name="" id="" class="btn btn-success" href="editar.php?txtCi=<?php echo $usuario->ci;?>&txtNombre=<?php echo $usuario->nombreCompleto;?>&txtClave=<?php echo $usuario->clave?>&txtCorreo=<?php echo $usuario->correo?>&txtTipo=<?php echo $usuario->tipo?>"  role="button">Editar <i class="bi bi-pencil-square"></i> </a> 
+                                    <a name="" id="" class="btn btn-success" href="editar.php?txtCi=<?php echo $usuario->ci;?>&txtNombre=<?php echo $usuario->nombreCompleto;?>&txtClave=<?php echo $usuario->clave?>&txtCorreo=<?php echo $usuario->correo?>&txtCelular=<?php echo $usuario->celular?>&txtTipo=<?php echo $usuario->tipo?>"  role="button">Editar <i class="bi bi-pencil-square"></i></a> 
                                     <?php espacio_br(2) ?>
                                     <a name="" id="" class="btn btn-danger" href="index.php?ciAnu=<?php echo $usuario->ci;?>"  role="button">Anular <i class="bi bi-arrow-down-circle"></i> </a>
                                     <?php espacio_br(2) ?> <a name="" id="" class="btn btn-primary" href="index.php?ciAct=<?php echo $usuario->ci;?>"  role="button">Activar <i class="bi bi-arrow-up-circle"></i> </a>
