@@ -75,7 +75,7 @@
         stream_context_set_option(stream_context_get_default(), $opciones);
         // Enviar el correo electrónico
         //mail($destinatario, $asunto, $mensaje, $headers);
-        registrarDatos($datosUsuario,'Usuario','RegistrarUsuario','Registro éxitoso');
+        registrarDatosLogin($datosUsuario,'Usuario','RegistrarUsuario','Registro exitoso, haga clic en el botón para iniciar sesión',$_POST['ci'],$_POST['clave']);
       }
       else
       {

@@ -89,6 +89,34 @@
     
         echo $html;
     }
+    function alertAvisoLogin($titulo,$texto,$txtAceptar,$ci,$clave) {
+        $html = "
+        <!-- Modal Body -->
+        <div style='z-index: 99999;' data-bs-backdrop='static' data-bs-keyboard='false' class='modal fade' id='modalId' tabindex='-1' role='dialog' aria-labelledby='modalTitleId' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-scrollable modal-dialog-top modal-sm' role='document'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+                        <h5 class='modal-title' id='modalTitleId'>$titulo</h5>
+                        <button onclick='recargarPagina()' type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                    </div>
+                    <div class='modal-body'>
+                        $texto
+                    </div>
+                    <div class='modal-footer'>
+                        <a type='button' href='login.php?Ci=$ci&Clave=$clave' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Script para activar el alert -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var myModal = new bootstrap.Modal(document.getElementById('modalId'));
+                myModal.show();
+            });
+        </script>";
+        echo $html;
+    }
     function alertConcretarPedido($titulo,$texto,$pedidos) {
         if(count($pedidos)>0)
         {

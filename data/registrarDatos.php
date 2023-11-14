@@ -43,4 +43,36 @@ function registrarDatos($datos, $categoria, $subcategoria,$mensaje)
         // Puedes obtener más detalles del error usando $http_response_header
     }
 }
+function registrarDatosLogin($datos, $categoria, $subcategoria,$mensaje,$ci,$clave)
+{
+    $endpoint = "/api/$categoria/$subcategoria";
+    $url = URL_API . $endpoint;
+    
+    // Convertir los datos del producto a formato JSON
+    $jsonData = json_encode($datos);
+    
+    // Configurar el contexto de la solicitud
+    $context = stream_context_create(array(
+        'http' => array(
+            'method' => 'POST',
+            'header' => "Content-Type: application/json\r\n" .
+                        "Accept: */*\r\n",
+            'content' => $jsonData
+        )
+    ));
+    
+    // Realizar la solicitud POST
+    $response = file_get_contents($url, false, $context);
+    
+    // Verificar si la solicitud fue exitosa
+    if ($response !== false) {
+        // Procesar la respuesta de la API aquí
+        alertAvisoLogin("Mensaje",$mensaje, "Iniciar sesión",$ci,$clave);
+    } else {
+        // Manejar el error de la API aquí
+        $httpCode = http_response_code();
+        echo "Error en la solicitud, el producto no se pudo registrar. Código de error: $httpCode";
+        // Puedes obtener más detalles del error usando $http_response_header
+    }
+}
 ?>

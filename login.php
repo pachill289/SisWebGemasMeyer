@@ -105,12 +105,12 @@ $url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
                     <div class="mb-3">
                       <label for="ci" class="form-label">Ci:</label>
                       <input type="number" required
-                        class="form-control" name="ci" id="ci" aria-describedby="helpCi" placeholder="Ingrese su carnet de identidad">
+                        class="form-control" name="ci" id="ci" value="<?php echo(isset($_GET['Ci'])? $_GET['Ci']: "")?>" aria-describedby="helpCi" placeholder="Ingrese su carnet de identidad">
                     </div class="mb-3">
                       <label for="clave" class="form-label">Contraseña:</label>
                       <div class="input-group">
                       <input type="password"
-                        class="form-control" required name="clave" id="clave" aria-describedby="helpClave" placeholder="Ingrese su contraseña">
+                        class="form-control" required name="clave" value="<?php echo(isset($_GET['Clave'])? $_GET['Clave']: "")?>" id="clave" aria-describedby="helpClave" placeholder="Ingrese su contraseña">
                         <div class="input-group-append">
                               <a id="iconoClave" class="input-group-text" onclick="mostrarClave(this);  "><i class="bi bi-eye"></i></a>
                               <a id="iconoClave2" class="input-group-text" onclick="mostrarClave(this); "><i class="bi bi-eye-slash-fill"></i></a>
