@@ -1,5 +1,5 @@
 <?php
-require_once '../../data/constantes.php';
+require_once 'constantes.php';
 /**
  * Registra datos en una API externa utilizando una solicitud POST.
  *

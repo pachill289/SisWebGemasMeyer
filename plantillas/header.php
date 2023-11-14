@@ -1,6 +1,9 @@
 <?php
     //url base para desarrollo
     $url_base = "http://localhost:80/SisWebGemasMeyer/";
+    //url producción 1:
+    //$url_base = "https://gemas-meyer-demo.great-site.net/";
+    //url producción 2:
     //$url_base = "http://pachill289-001-site1.htempurl.com/";
     if(isset($_COOKIE['usuario']))
     {
@@ -55,8 +58,11 @@
             Ver carrito <i class="bi bi-cart4"></i>
             <!--Conteo de productos para el carrito -->
             <?php 
-                $productosCarrito = $_SESSION['comprasCarrito'];
-                echo "<span><b>(".count($productosCarrito->compras).")</b></span>";
+                if(isset($_SESSION['comprasCarrito']))
+                {
+                    $productosCarrito = $_SESSION['comprasCarrito'];
+                    echo "<span><b>(".count($productosCarrito->compras).")</b></span>";
+                }
              ?>
             </button>
     <?php }
@@ -127,7 +133,12 @@
             </li>
             <li class="nav-item">
                 <?php if(!isset($usuarioSesion)) {?>
-                <a style="margin-left: 30px;margin-top: 30px;" class="btn btn-primary" href="<?php echo $url_base;?>login.php"><b>Iniciar sesión</b> <i class="bi bi-door-open-fill"></i></a>
+                <a style="margin-left: 30px;margin-top: 30px;" class="btn btn-primary" href="<?php echo $url_base;?>login.php"><b>Iniciar sesión</b><i class="bi bi-door-open-fill"></i></a>
+                <a style="margin-top: 30px;" class="btn btn-success" href="<?php echo $url_base;?>registro.php" role="button">Registrarse 
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                    <path d="M2 13c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Z"/>
+                </svg></a>
                 <?php }
                 else
                 {
@@ -135,7 +146,8 @@
                     echo "<a style='margin-left: 30px;' class='btn btn-danger' href='".$url_base."/logout.php'>Cerrar sesión <i class='bi bi-door-closed-fill'></i></a>";
                 }?>
                 <?php if(isset($usuarioSesion) && $usuarioSesion->tipo == 3) {?>
-                <div style="z-index: 99999;" class="dropdown open">
+                <div style="z-index: 99999;margin-left: 30px;" class="dropdown open">
+                <br/>
                     <button class="btn btn-primary dropdown-toggle" type="button" id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
                                Perfil
@@ -145,10 +157,6 @@
                     </div>
                 </div>
                 <?php }?>
-            </li>
-            <!-- Carrito de compras -->
-            <li class="nav-item">
-                
             </li>
             <li style="margin-left: 50px;" class="nav-item"><img height="100px" src="<?php echo $url_base;?>resources/logo2.jpg"></li>
         </ul>

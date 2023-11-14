@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "781caf66ceb7d160327caf1c2642152c",
+    "content-hash": "ac147aa2a17656b203b35a4355fd1247",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -140,16 +140,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.319.0",
+            "version": "v0.323.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "9206f4d8cfacbec3c494d68f1758b2c8ca5b179d"
+                "reference": "d5497d30ddfafe7592102ca48bedaf222a4ca7a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/9206f4d8cfacbec3c494d68f1758b2c8ca5b179d",
-                "reference": "9206f4d8cfacbec3c494d68f1758b2c8ca5b179d",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d5497d30ddfafe7592102ca48bedaf222a4ca7a6",
+                "reference": "d5497d30ddfafe7592102ca48bedaf222a4ca7a6",
                 "shasum": ""
             },
             "require": {
@@ -178,22 +178,22 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.319.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.323.0"
             },
-            "time": "2023-10-08T01:02:14+00:00"
+            "time": "2023-11-06T01:08:38+00:00"
         },
         {
             "name": "google/auth",
-            "version": "v1.31.0",
+            "version": "v1.32.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "22209fddd0c06f3f8e3cb4aade0b352aa00f9888"
+                "reference": "999e9ce8b9d17914f04e1718271a0a46da4de2f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/22209fddd0c06f3f8e3cb4aade0b352aa00f9888",
-                "reference": "22209fddd0c06f3f8e3cb4aade0b352aa00f9888",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/999e9ce8b9d17914f04e1718271a0a46da4de2f3",
+                "reference": "999e9ce8b9d17914f04e1718271a0a46da4de2f3",
                 "shasum": ""
             },
             "require": {
@@ -236,9 +236,9 @@
             "support": {
                 "docs": "https://googleapis.github.io/google-auth-library-php/main/",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.31.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.32.1"
             },
-            "time": "2023-10-05T20:39:00+00:00"
+            "time": "2023-10-17T21:13:22+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -567,16 +567,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "e2392369686d420ca32df3803de28b5d6f76867d"
+                "reference": "c915e2634718dbc8a4a15c61b0e62e7a44e14448"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e2392369686d420ca32df3803de28b5d6f76867d",
-                "reference": "e2392369686d420ca32df3803de28b5d6f76867d",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c915e2634718dbc8a4a15c61b0e62e7a44e14448",
+                "reference": "c915e2634718dbc8a4a15c61b0e62e7a44e14448",
                 "shasum": ""
             },
             "require": {
@@ -652,7 +652,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/3.4.0"
+                "source": "https://github.com/Seldaek/monolog/tree/3.5.0"
             },
             "funding": [
                 {
@@ -664,7 +664,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-21T08:46:11+00:00"
+            "time": "2023-10-27T15:32:31+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -785,16 +785,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.23",
+            "version": "3.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "866cc78fbd82462ffd880e3f65692afe928bed50"
+                "reference": "33fa69b2514a61138dd48e7a49f99445711e0ad0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/866cc78fbd82462ffd880e3f65692afe928bed50",
-                "reference": "866cc78fbd82462ffd880e3f65692afe928bed50",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/33fa69b2514a61138dd48e7a49f99445711e0ad0",
+                "reference": "33fa69b2514a61138dd48e7a49f99445711e0ad0",
                 "shasum": ""
             },
             "require": {
@@ -875,7 +875,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.23"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.33"
             },
             "funding": [
                 {
@@ -891,7 +891,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-18T17:22:01+00:00"
+            "time": "2023-10-21T14:00:39+00:00"
         },
         {
             "name": "psr/cache",

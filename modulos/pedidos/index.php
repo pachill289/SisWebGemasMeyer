@@ -27,60 +27,67 @@
     $pedidosExpirados = 0;
     $pedidosActivos = 0;
     $validez = true;
-    if(count($pedidos->pedidos))
-    {
-        foreach ($pedidos->pedidos as $pedido) { 
-            $fechaInicio = new DateTime($pedido->fecha);
-            $fechaExpiracion = new DateTime($pedido->fecha_expiracion);
-            if ($hoy >= $fechaInicio && $hoy <= $fechaExpiracion) {
-                //echo "El pedido está dentro del plazo de validez.";
-                $pedidosActivos++;
-                alert("Pedidos pendientes","Número de pedidos pendientes: ".$pedidosActivos,"Aceptar");
-            } else {
-                if($pedido->estado == 3)
-                {
-                    $url = "https://apijoyeriav2.somee.com/api/UsuarioPedido/AnularPedido/".$pedido->idPedido;
-                    // Inicializar cURL
-                    $ch = curl_init($url);
-                    // Configurar la solicitud PUT y otros ajustes necesarios
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, '');
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        'Content-Type: application/json'
-                    ));
-                    // Ejecutar la solicitud y obtener la respuesta
-                    $response = curl_exec($ch);
-                    // Verificar si hubo algún error
-                    if ($response === false) {
-                        echo 'Error: ' . curl_error($ch);
+    //Seguridad autorización
+    if(isset($_COOKIE['usuario']))
+    { 
+        $usuarioSesion = json_decode($_COOKIE['usuario']); 
+        if($usuarioSesion->tipo == 1) {
+            if(count($pedidos->pedidos))
+            {
+            foreach ($pedidos->pedidos as $pedido) { 
+                $fechaInicio = new DateTime($pedido->fecha);
+                $fechaExpiracion = new DateTime($pedido->fecha_expiracion);
+                if ($hoy >= $fechaInicio && $hoy <= $fechaExpiracion) {
+                    //echo "El pedido está dentro del plazo de validez.";
+                    $pedidosActivos++;
+                    alert("Pedidos pendientes","Número de pedidos pendientes: ".$pedidosActivos,"Aceptar");
+                } else {
+                    if($pedido->estado == 3)
+                    {
+                        $url = "https://apijoyeriav2.somee.com/api/UsuarioPedido/AnularPedido/".$pedido->idPedido;
+                        // Inicializar cURL
+                        $ch = curl_init($url);
+                        // Configurar la solicitud PUT y otros ajustes necesarios
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                            'Content-Type: application/json'
+                        ));
+                        // Ejecutar la solicitud y obtener la respuesta
+                        $response = curl_exec($ch);
+                        // Verificar si hubo algún error
+                        if ($response === false) {
+                            echo 'Error: ' . curl_error($ch);
+                        }
+                        // Obtener el código de respuesta HTTP
+                        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        // Cerrar la conexión cURL
+                        curl_close($ch);
+                        // Procesar la respuesta
+                        if ($httpCode != 200) {
+                            echo 'Error en la solicitud PUT. Código de respuesta: ' . $httpCode;
+                        }              
+                        $pedidosExpirados++;
+                        alertAviso("Pedidos que han expirado",$pedidosExpirados." pedidos han expirado.","Aceptar");
                     }
-                    // Obtener el código de respuesta HTTP
-                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    // Cerrar la conexión cURL
-                    curl_close($ch);
-                    // Procesar la respuesta
-                    if ($httpCode != 200) {
-                        echo 'Error en la solicitud PUT. Código de respuesta: ' . $httpCode;
-                    }              
-                    $pedidosExpirados++;
-                    alertAviso("Pedidos que han expirado",$pedidosExpirados." pedidos han expirado.","Aceptar");
                 }
             }
         }
-    }
-    //Limpieza manual
-    //Verificar si no existe ningún pedido para deshabilitar el botón para borrar todos los pedidos
-    $pedidosTotales = 0;
-    //Verificar si existe algún pedido
-    foreach ($pedidos->pedidos as $pedido) { 
-        $pedidosTotales++;
-    }
-    //Verificar si existe algún pedido pendiente
-    $pedidosPendientes = 0;
-    foreach ($pedidos->pedidos as $pedido) { 
-        if($pedido->estado == 1 || $pedido->estado == 3) {
-            $pedidosPendientes++;
+        //Limpieza manual
+        //Verificar si no existe ningún pedido para deshabilitar el botón para borrar todos los pedidos
+        $pedidosTotales = 0;
+        //Verificar si existe algún pedido
+        foreach ($pedidos->pedidos as $pedido) { 
+            $pedidosTotales++;
+        }
+        //Verificar si existe algún pedido pendiente
+        $pedidosPendientes = 0;
+        foreach ($pedidos->pedidos as $pedido) { 
+            if($pedido->estado == 1 || $pedido->estado == 3) {
+                $pedidosPendientes++;
+            }
+        }
         }
     }
     if($_POST)
@@ -299,6 +306,8 @@
     }
      
 ?>
+<?php if(isset($_COOKIE['usuario']))
+    { $usuarioSesion = json_decode($_COOKIE['usuario']); if($usuarioSesion->tipo == 1) {?>
 <h4>Listado de todos los pedidos</h4>
     <!-- Limpieza de pedidos -->
     <form method="post">
@@ -438,4 +447,10 @@
             </div>
         </div>
     </div>
+    <?php } else {
+      echo "<h1 style='color: red;'><b><center>Acceso denegado</center></b></h1>";
+    }
+    } else {
+      echo "<h1 style='color: #b59410;'><b><center>Debe autenticarse primero</center></b></h1>";
+    } ?>
 <?php include('../../plantillas/footer.php');?>

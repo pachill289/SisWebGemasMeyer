@@ -50,6 +50,8 @@
     }
 ?>
 <?php include('../../plantillas/header.php');?>
+<?php if(isset($_COOKIE['usuario']))
+    { $usuarioSesion = json_decode($_COOKIE['usuario']); if($usuarioSesion->tipo == 1) {?>
 <h4>Editar usuario</h4>
     <div class="card">
         <div class="card-header">
@@ -117,4 +119,10 @@
             
         </div>
     </div>
+    <?php } else {
+      echo "<h1 style='color: red;'><b><center>Acceso denegado</center></b></h1>";
+    }
+    } else {
+      echo "<h1 style='color: #b59410;'><b><center>Debe autenticarse primero</center></b></h1>";
+    } ?>
 <?php include('../../plantillas/footer.php');?>

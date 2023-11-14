@@ -6,10 +6,13 @@ require_once('data/obtenerDatos.php');
 require_once('models/Usuarios.php');
 require_once('models/ComprasCarrito.php');
 session_start();
+//url desarrollo
 $url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
 //url producción
 //$url_base = "http://pachill289-001-site1.htempurl.com/modulos/productos/";
 //$url_base = "http://localhost:80/SisWebGemasMeyer/modulos/productos/";
+//url producción 2
+//$url_base = "https://gemas-meyer-demo.great-site.net/";
  //Agregar a todos los usuarios desde la API
  $usuarios = new Usuarios();
  //agregar todos los usuarios al objeto Usuarios

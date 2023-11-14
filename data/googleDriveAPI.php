@@ -4,6 +4,8 @@ require_once '../../vendor/autoload.php';
 require_once '../../componentes/componentesHtml.php';
 //Es necesario actualizar la cuenta de servicio de google si esta ha caducado,la misma caduca el 31   de diciembre de 2023
 putenv('GOOGLE_APPLICATION_CREDENTIALS=../../data/webgemasmeyer-2670159b89b9.json');
+//Versión de la API
+// Obtener la versión de la API de Google Drive
 
 //Funciones
 //Función que obtiene el cliente de google

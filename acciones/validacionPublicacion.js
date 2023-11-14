@@ -1,14 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var valorTipo = $("#tipoSelect").val();
     //código a ejecutar cuando la página se carga
-    if(valorTipo == 1)
-    {
-        $("#promocionInputs").hide();
-    }
-    else
-    {
-        $("#promocionInputs").show();
-    }
+    $("#productoSelect").hide();
 });
 //Si el usuario requiere una opción para borrar los datos
 function recargarPagina()

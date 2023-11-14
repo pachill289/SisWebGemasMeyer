@@ -1,8 +1,8 @@
 <?php
-  require_once('../../models/Usuarios.php');
-  require_once('../../data/registrarDatos.php');
-  require_once('../../data/obtenerDatos.php');
-  require_once('../../componentes/componentesHtml.php');
+  require_once('models/Usuarios.php');
+  require_once('data/registrarDatos.php');
+  require_once('data/obtenerDatos.php');
+  require_once('componentes/componentesHtml.php');
   $usuarioExistente = false;
     //Verificar registro/añadir nuevo usuario mediante a la API
     if($_POST)
@@ -25,7 +25,57 @@
           "estado" => $_POST['estado'],
           "nombreCompleto" => $_POST['nombreCompleto']
         );
-        registrarDatos($datosUsuario,'Usuario','RegistrarUsuario','Usuario registrado con éxito');
+        //Lógica verificación email
+        function generarCodigoVerificacion() {
+            // Longitud del código de verificación
+            $longitud = 4;
+        
+            // Caracteres permitidos en el código
+            $caracteresPermitidos = '0123456789';
+        
+            // Generar el código aleatorio
+            $codigo = '';
+            for ($i = 0; $i < $longitud; $i++) {
+                $codigo .= $caracteresPermitidos[rand(0, strlen($caracteresPermitidos) - 1)];
+            }
+        
+            return $codigo;
+        }
+        function generarLinkConfirmacion($codigoVerificacion) {
+            // URL de confirmación
+            $urlConfirmacion = "http://localhost:80/confirmar.php";
+        
+            // Agregar el código de verificación como parámetro en la URL
+            $linkConfirmacion = $urlConfirmacion . "?codigo=" . $codigoVerificacion;
+        
+            return $linkConfirmacion;
+        }
+        $destinatario = $_POST['correo'];
+        $asunto = "Verificación de Correo";
+        
+        // Generar un código de verificación (puedes implementar tu propia lógica)
+        $codigoVerificacion = generarCodigoVerificacion();
+        $linkConfirmacion = generarLinkConfirmacion($codigoVerificacion);
+
+        // Mensaje de correo electrónico
+        $mensaje = "¡Gracias por registrarte! Tu código de verificación es: $codigoVerificacion, ingresa al siguiente enlace: $linkConfirmacion para verificar tu correo electrónico ingresando el código $codigoVerificacion";
+
+        // Cabeceras del correo electrónico
+        $headers = "From: $destinatario\r\n";
+        $headers .= "Reply-To: $destinatario\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion();
+        // Configuración de seguridad para STARTTLS
+        $opciones = [
+            "ssl" => [
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+                "allow_self_signed" => true
+            ]
+        ];
+        stream_context_set_option(stream_context_get_default(), $opciones);
+        // Enviar el correo electrónico
+        //mail($destinatario, $asunto, $mensaje, $headers);
+        registrarDatos($datosUsuario,'Usuario','RegistrarUsuario','Registro éxitoso');
       }
       else
       {
@@ -33,10 +83,8 @@
       }
     }
 ?>
-<?php include('../../plantillas/header.php');?>
-    <?php if(isset($_COOKIE['usuario']))
-    { $usuarioSesion = json_decode($_COOKIE['usuario']); if($usuarioSesion->tipo == 1) {?>
-    <h4>Registrar nuevo usuario</h4>
+<?php include('plantillas/header.php');?>
+    <h4>Formulario de registro</h4>
     <div class="card">
         <div class="card-header">
             Datos del nuevo usuario
@@ -80,8 +128,7 @@
                   <div class="mb-3">
                     <label for="tipo" class="form-label">Tipo:</label>
                     <select  required class="form-select form-select-lg" name="tipo" id="tipo">
-                        <option value="1">Administrador</option>
-                        <option value="2">Vendedor</option>
+                        <option hidden value="1">Administrador</option>
                         <option selected value="3">Cliente</option>
                     </select>
                   </div>
@@ -90,15 +137,8 @@
                   <input type="hidden"
                     class="form-control" name="estado" value=1>
                 </div>
-                <button type="submit" class="btn btn-success">Registrar usuario</button>
+                <button type="submit" class="btn btn-success">Registrarse</button>
                 <a name="" id="" class="btn btn-danger" href="index.php" role="button">Cancelar</a>
             </form>
         </div>
-    </div>
-    <?php } else {
-      echo "<h1 style='color: red;'><b><center>Acceso denegado</center></b></h1>";
-    }
-    } else {
-      echo "<h1 style='color: #b59410;'><b><center>Debe autenticarse primero</center></b></h1>";
-    } ?>
-<?php include('../../plantillas/footer.php');?>
+</div>
