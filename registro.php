@@ -1,11 +1,14 @@
 <?php
+  include('plantillas/header.php'); 
+  require('componentes/componentesHtml.php');
+  require_once('data/obtenerDatos.php');
   require_once('models/Usuarios.php');
   require_once('data/registrarDatos.php');
-  require_once('data/obtenerDatos.php');
-  require_once('componentes/componentesHtml.php');
+
   $usuarioExistente = false;
     //Verificar registro/añadir nuevo usuario mediante a la API
-    if($_POST)
+    
+    if($_POST && isset($_POST['ci']))
     {
       //Verificar si el producto ya existe
        foreach (construirEndpoint('Usuario', 'ObtenerUsuarios') as $usuario) {
@@ -25,6 +28,7 @@
           "estado" => $_POST['estado'],
           "nombreCompleto" => $_POST['nombreCompleto']
         );
+        
         //Lógica verificación email
         function generarCodigoVerificacion() {
             // Longitud del código de verificación
@@ -72,22 +76,23 @@
                 "allow_self_signed" => true
             ]
         ];
-        stream_context_set_option(stream_context_get_default(), $opciones);
+        
+        //stream_context_set_option(stream_context_get_default(), $opciones);
         // Enviar el correo electrónico
         //mail($destinatario, $asunto, $mensaje, $headers);
-        registrarDatosLogin($datosUsuario,'Usuario','RegistrarUsuario','Registro exitoso, haga clic en el botón para iniciar sesión',$_POST['ci'],$_POST['clave']);
+        registrarDatosLogin($datosUsuario,'Usuario','RegistrarUsuario','Se ha registrado correctamente',$_POST['ci'],$_POST['clave']);
       }
       else
       {
         alert("Aviso ⚠","El usuario ya existe,vuelva a intentarlo","Aceptar");
       }
     }
+    
 ?>
-<?php include('plantillas/header.php');?>
     <h4>Formulario de registro</h4>
     <div class="card">
         <div class="card-header">
-            Datos del nuevo usuario
+            Ingrese sus datos
         </div>
         <div class="card-body">
             <form action="" method="post" enctype="multipart/form-data">
@@ -126,9 +131,7 @@
                   <small id="helpCorreo" class="form-text">El celular debe empezar por 6 o 7 y debe contener 8 dígitos.</small>
                   <br/>
                   <div class="mb-3">
-                    <label for="tipo" class="form-label">Tipo:</label>
-                    <select  required class="form-select form-select-lg" name="tipo" id="tipo">
-                        <option hidden value="1">Administrador</option>
+                    <select hidden required class="form-select form-select-lg" name="tipo" id="tipo">
                         <option selected value="3">Cliente</option>
                     </select>
                   </div>
@@ -138,7 +141,8 @@
                     class="form-control" name="estado" value=1>
                 </div>
                 <button type="submit" class="btn btn-success">Registrarse</button>
-                <a name="" id="" class="btn btn-danger" href="index.php" role="button">Cancelar</a>
+                <a class="btn btn-danger" href="index.php" role="button">Cancelar</a>
             </form>
         </div>
 </div>
+<?php include('plantillas/footer.php'); ?>

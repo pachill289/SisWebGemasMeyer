@@ -20,9 +20,17 @@ putenv('GOOGLE_APPLICATION_CREDENTIALS=../../data/webgemasmeyer-2670159b89b9.jso
     function GetDriveClient()
     {
         //Definir el servicio de google
+        /*
         $client = new Google_Client();
         $client->useApplicationDefaultCredentials();
         //$client->setScopes(['https://www.googleapis.com/auth/drive.file']);
+        $client->addScope(Google_Service_Drive::DRIVE);
+        return $client;
+        */
+        // Configurar las credenciales con la clave de API para producción
+        $client = new Google_Client();
+        $client->setApplicationName('SisWebBolivianita');
+        $client->setDeveloperKey('AIzaSyBfPk0hwW5WmPEtkOTdJlIN7XEb283BgIM'); // Reemplaza con tu clave de API
         $client->addScope(Google_Service_Drive::DRIVE);
         return $client;
         //API key (opcional si se usa AuthO): AIzaSyBfPk0hwW5WmPEtkOTdJlIN7XEb283BgIM

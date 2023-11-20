@@ -103,7 +103,7 @@
                         $texto
                     </div>
                     <div class='modal-footer'>
-                        <a type='button' href='login.php?Ci=$ci&Clave=$clave' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</a>
+                        <a onclick='recargarPagina()' type='button' href='login.php?Ci=$ci&Clave=$clave' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</a>
                     </div>
                 </div>
             </div>
@@ -114,6 +114,10 @@
                 var myModal = new bootstrap.Modal(document.getElementById('modalId'));
                 myModal.show();
             });
+            function recargarPagina()
+            {
+                window.location.href = 'login.php?Ci=$ci&Clave=$clave';
+            }
         </script>";
         echo $html;
     }

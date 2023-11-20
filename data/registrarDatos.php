@@ -1,5 +1,5 @@
 <?php
-require_once 'constantes.php';
+require_once ('constantes.php');
 /**
  * Registra datos en una API externa utilizando una solicitud POST.
  *
@@ -67,7 +67,7 @@ function registrarDatosLogin($datos, $categoria, $subcategoria,$mensaje,$ci,$cla
     // Verificar si la solicitud fue exitosa
     if ($response !== false) {
         // Procesar la respuesta de la API aquí
-        alertAvisoLogin("Mensaje",$mensaje, "Iniciar sesión",$ci,$clave);
+        alertAvisoLogin("Mensaje",$mensaje, "Aceptar",$ci,$clave);
     } else {
         // Manejar el error de la API aquí
         $httpCode = http_response_code();

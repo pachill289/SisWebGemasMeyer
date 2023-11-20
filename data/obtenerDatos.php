@@ -1,5 +1,5 @@
 <?php
-require_once 'constantes.php';
+require_once ('constantes.php');
 /**
 * Esta función obtiene endpoints desde una url de una API de tipo http
 */

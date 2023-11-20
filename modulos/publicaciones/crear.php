@@ -21,12 +21,18 @@
     }
     putenv('GOOGLE_APPLICATION_CREDENTIALS=../../data/webgemasmeyer-2670159b89b9.json');
     //Definir el servicio de google
+    /*Desarrollo
     $client = new Google_Client();
     $client->useApplicationDefaultCredentials();
     //$client->setScopes(['https://www.googleapis.com/auth/drive.file']);
     $client->addScope(Google_Service_Drive::DRIVE);
     //API key (opcional si se usa AuthO): AIzaSyBfPk0hwW5WmPEtkOTdJlIN7XEb283BgIM
-
+    */
+    //Producción
+    $client = new Google_Client();
+    $client->setApplicationName('SisWebBolivianita');
+    $client->setAuthConfig('../../data/webgemasmeyer-2670159b89b9.json');
+    $client->addScope(Google_Service_Drive::DRIVE);
     //Uso de google drive
     //usa este id para determinar la carpeta de google drive
     $folderId = '1ibwNXkd6YS-YIj7n45Jxd3wvl8AFjhb1';

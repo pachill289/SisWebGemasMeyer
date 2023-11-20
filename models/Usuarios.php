@@ -35,7 +35,6 @@ class Usuarios {
         $this->usuarios[] = $usuario;
     }
 }
-
 /* Crear un objeto de la clase
 $objeto = new Usuario("valor1", "valor2");
 
@@ -46,3 +45,5 @@ echo $objeto->propiedad2;
 // Llamar a un método del objeto
 $objeto->miMetodo();
 */
+?>
+

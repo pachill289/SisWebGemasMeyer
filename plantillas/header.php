@@ -1,8 +1,8 @@
 <?php
     //url base para desarrollo
-    $url_base = "http://localhost:80/SisWebGemasMeyer/";
+    //$url_base = "http://localhost:80/SisWebGemasMeyer/";
     //url producción 1:
-    //$url_base = "https://gemas-meyer-demo.great-site.net/";
+    $url_base = "https://gemas-meyer-demo.great-site.net/";
     //url producción 2:
     //$url_base = "http://pachill289-001-site1.htempurl.com/";
     if(isset($_COOKIE['usuario']))
