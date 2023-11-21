@@ -37,17 +37,22 @@
                         $texto
                     </div>
                     <div class='modal-footer'>
-                        <button type='button' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</button>
+                        <button type='button' onclick='quitarModal()' class='btn btn-primary' data-bs-dismiss='modal'>$txtAceptar</button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Script para activar el alert -->
         <script>
+        var myModal = null;
             document.addEventListener('DOMContentLoaded', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('modalId'));
+                myModal = new bootstrap.Modal(document.getElementById('modalId'));
                 myModal.show();
             });
+            function quitarModal ()
+            {
+                myModal.hide();
+            }
         </script>";
     
         echo $html;

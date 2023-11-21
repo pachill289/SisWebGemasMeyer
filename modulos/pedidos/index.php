@@ -40,7 +40,7 @@
                 if ($hoy >= $fechaInicio && $hoy <= $fechaExpiracion) {
                     //echo "El pedido está dentro del plazo de validez.";
                     $pedidosActivos++;
-                    alert("Pedidos pendientes","Número de pedidos pendientes: ".$pedidosActivos,"Aceptar");
+                    //alert("Pedidos pendientes","Número de pedidos pendientes: ".$pedidosActivos,"Aceptar");
                 } else {
                     if($pedido->estado == 3)
                     {
@@ -174,7 +174,7 @@
                 $cantidadPedido = $_GET['cantidadPedido'];
 
                 // URL de la API con los parámetros de ruta y consulta
-                $url = "https://apijoyeriav2.somee.com/api/UsuarioPedido/ConcretarPedido/{$pedidoId}/   {$productoId}?cantidadPedido={$cantidadPedido}";
+                $url = "https://apijoyeriav2.somee.com/api/UsuarioPedido/ConcretarPedido/{$pedidoId}/{$productoId}?cantidadPedido={$cantidadPedido}";
 
                 // Datos del cuerpo del PUT como un arreglo
                 $datosPUT = array(
