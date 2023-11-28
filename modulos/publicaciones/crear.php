@@ -1,12 +1,17 @@
 <?php include('../../plantillas/header.php');?>
   <?php
+    require('../../componentes/componentesHtml.php');
     require_once('../../data/obtenerDatos.php');
     require_once('../../models/Productos.php');
-    require('../../componentes/componentesHtml.php');
+    require_once ('../../data/googleDriveAPI.php');
+    require_once '../../data/registrarDatos.php';
+    require_once '../../data/constantes.php';
+    
     //API Google drive uso de composer
     require_once '../../vendor/autoload.php';
+    //Obtiene el servicio de google drive listo para ser usado
+    $googleDriveService = GetDriveService(GetDriveClient());
     //Es necesario actualizar la cuenta de servicio de google si esta ha caducado,la misma caduca el 31   de diciembre de 2023
-    
     $productos = new Productos();
     foreach (construirEndpoint('Producto', 'ObtenerProductos') as $producto) {
         $productos->agregarProducto(new Producto(
@@ -53,86 +58,130 @@
         $service = new Google_Service_Drive($client);
         // Obtener información de la imagen subida
         $file = $_FILES['imagen'];
-
+        if($_POST['imagen_seleccionada']=="ninguno")
+        {
         // Verificar si se cargó correctamente
         if ($file['error'] === UPLOAD_ERR_OK) {
           // Obtener el nombre y la ruta temporal del archivo
           $fileName = $file['name'];
           $filePath = $file['tmp_name'];
-        
-          // Crear un archivo en Google Drive
-          $fileMetadata = new Google_Service_Drive_DriveFile(array(
-            'name' => $fileName,
-            'parents' => array($folderId), // ID de la carpeta de destino en Google Drive
-          ));
-        
-          $fileContent = file_get_contents($filePath);
-        
-          $file = $service->files->create($fileMetadata, array(
-            'data' => $fileContent,
-            'uploadType' => 'multipart',
-            'fields' => 'id, webContentLink',
-          ));
-          $urlImagen = str_replace('&export=download','',$file->webContentLink);
+          if(!verifyFileInFolder($fileName,GOOGLE_DRIVE_FOLDER_ID,$googleDriveService)) {
+            // Crear un archivo en Google Drive
+            $fileMetadata = new Google_Service_Drive_DriveFile(array(
+              'name' => $fileName,
+              'parents' => array($folderId), // ID de la carpeta de destino en Google Drive
+            ));
+          
+            $fileContent = file_get_contents($filePath);
+          
+            $file = $service->files->create($fileMetadata, array(
+              'data' => $fileContent,
+              'uploadType' => 'multipart',
+              'fields' => 'id, webContentLink',
+            ));
+            $urlImagen = str_replace('&export=download','',$file->webContentLink);
 
-          //Subir datos a la API
+            //Subir datos a la API
+            // Datos del body
+            if($_POST['tipo'] == 2)
+            {
+              $datosProducto = array(
+                  "titulo" => $_POST['titulo'],
+                  "descripcion" => $_POST['descripcion'],
+                  "imagen" => $urlImagen,
+                  "estado" => 1,
+                  "tipo" => intval($_POST['tipo']),
+                  "idProducto" => intval($_POST['productoId']),
+                  "descuento" => $_POST['descuento']
+                );
+            }
+            else
+            {
+              $datosProducto = array(
+                  "titulo" => $_POST['titulo'],
+                  "descripcion" => $_POST['descripcion'],
+                  "imagen" => $urlImagen,
+                  "estado" => 1,
+                  "tipo" => intval($_POST['tipo'])
+                );
+            }
+
+          
+            // Convertir el body a formato JSON
+            $jsonData = json_encode($datosProducto,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            //print_r($jsonData);
+            // URL de la API
+            $url = "https://apijoyeriav2.somee.com/api/UsuarioPublicacion/RegistrarPublicacion";
+          
+            // Configurar el flujo de contexto
+            $context = stream_context_create(array(
+              'http' => array(
+                  'method' => 'POST',
+                  'header' => 'Content-Type: application/json',
+                  'content' => $jsonData
+              )
+            ));
+          
+            // Realizar la solicitud POST
+            $response = file_get_contents($url, false, $context);
+          
+            // Verificar si la solicitud fue exitosa
+            if ($response !== false) {
+              alertAviso("Mensaje","Publicación creada con éxito ✅","Aceptar");
+              // Procesar la respuesta de la API aquí
+            } else {
+              $httpCode = http_response_code();
+              echo "Error en la solicitud, el producto no se pudo registrar por un error: $httpCode";
+              // Manejar el error de la API aquí
+            }
+        }
+        } else {
+          // Mostrar un mensaje de error en caso de fallo en la carga
+          alert("Aviso","Suba o seleccione una imagen","Aceptar");
+        }
+      }
+      else
+      {
+        $publicacionExistente = false;
+        //Verificar si la publicación ya existe
+        foreach (construirEndpoint('UsuarioPublicacion', 'ObtenerPublicaciones') as $publicacion) {
+          if ($publicacion->titulo == $_POST['titulo']) {
+              $publicacionExistente = true;
+          }
+        }
+        if($publicacionExistente == false)
+        {
           // Datos del body
           if($_POST['tipo'] == 2)
           {
             $datosProducto = array(
                 "titulo" => $_POST['titulo'],
                 "descripcion" => $_POST['descripcion'],
-                "imagen" => $urlImagen,
+                "imagen" => $_POST['imagen_seleccionada'],
                 "estado" => 1,
                 "tipo" => intval($_POST['tipo']),
                 "idProducto" => intval($_POST['productoId']),
                 "descuento" => $_POST['descuento']
               );
+            registrarDatos($datosProducto,'UsuarioPublicacion','RegistrarPublicacion',"Publicación registrada con éxito");
           }
           else
           {
             $datosProducto = array(
                 "titulo" => $_POST['titulo'],
                 "descripcion" => $_POST['descripcion'],
-                "imagen" => $urlImagen,
+                "imagen" => $_POST['imagen_seleccionada'],
                 "estado" => 1,
                 "tipo" => intval($_POST['tipo'])
               );
+            registrarDatos($datosProducto,'UsuarioPublicacion','RegistrarPublicacion',"Publicación registrada con éxito");
           }
-          
-    
-          // Convertir el body a formato JSON
-          $jsonData = json_encode($datosProducto,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-          //print_r($jsonData);
-          // URL de la API
-          $url = "https://apijoyeriav2.somee.com/api/UsuarioPublicacion/RegistrarPublicacion";
-    
-          // Configurar el flujo de contexto
-          $context = stream_context_create(array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => 'Content-Type: application/json',
-                'content' => $jsonData
-            )
-          ));
-    
-          // Realizar la solicitud POST
-          $response = file_get_contents($url, false, $context);
-    
-          // Verificar si la solicitud fue exitosa
-          if ($response !== false) {
-            alertAviso("Mensaje","Publicación creada con éxito ✅","Aceptar");
-            // Procesar la respuesta de la API aquí
-          } else {
-            $httpCode = http_response_code();
-            echo "Error en la solicitud, el producto no se pudo registrar por un error: $httpCode";
-            // Manejar el error de la API aquí
-          }
-        } else {
-          // Mostrar un mensaje de error en caso de fallo en la carga
-          echo 'Error al subir el archivo.';
-          
         }
+        else
+        {
+          alert("Aviso","El título de la publicación ya existe, vuelva a intentarlo.","Aceptar");
+        }
+      }
       }catch(Google_Service_Exception $gs){
           $mensaje = json_decode($gs->getMessage());
           echo $mensaje->error->message;
@@ -183,10 +232,62 @@
                     class="form-control" name="descuento" aria-describedby="helpId" placeholder="porcentaje">
                   <small id="helpId" class="form-text text-muted">Debe insertar una cantidad entre 10 y 50</small>
                 </div>
-                <label for="imagen" class="form-label">Escoger una imagen para la publicación (Se recomienda una imagen horizontal de 480x250 píxeles)</i>
-                <input required type="file" accept=".jpg, .png" class="form-control" name="imagen" id="imagen" placeholder="Seleccione una imagen válida de tipo .jpg o .png" aria-describedby="ImagenHelpId">
-                <div id="ImagenHelpId" class="form-text">Seleccione una imagen válida de tipo .jpg o .png y que no sea muy grande (máximo de 1024x1024 píxeles).</div>
+                <div id="imagenSelection">
+                  <label for="imagen" class="form-label">Escoger una imagen para la publicación (Se recomienda una imagen horizontal de 480x250 píxeles)</label>
+                  <input id="seleccionNuevaImagen" type="file" accept=".jpg, .png" class="form-control" name="imagen" id="imagen" placeholder="Seleccione una imagen válida  de tipo .jpg o .png" aria-describedby="ImagenHelpId">
+                  <div id="ImagenHelpId" class="form-text">Seleccione una imagen válida de tipo .jpg o .png y que no sea muy grande (máximo de 1024x1024 píxeles).</div>
+                </div>
                 <!-- el estado por defecto será 1-->
+                <label>Seleccionar imagen desde google drive (En caso de que la imagen ya exista):</label>
+                  <?php espacio_br(1);?>
+                  <?php
+                    try {
+                      $folderId = GOOGLE_DRIVE_FOLDER_ID;
+                      // Realiza una consulta para obtener la lista de archivos en la carpeta
+                      $results = $googleDriveService->files->listFiles([
+                          'q' => "'$folderId' in parents and mimeType contains 'image/'",
+                      ]);
+                      
+                      // Crea el elemento select
+                      echo '<select class="form-select form-select-lg" name="imagen_seleccionada" id="imagen_seleccionada">';
+                      echo '<option selected value="ninguno">Seleccione una imagen</option>';
+                      $ur_base_img = "https://drive.google.com/uc?id=";
+                      foreach ($results->getFiles() as $file) {
+                          echo '<option value="' . $ur_base_img.$file->getId() . '">'. 
+                          $file->getName().'</option>';
+                      }
+                      
+                      echo '</select>';
+                      // Crea un elemento div para mostrar la imagen seleccionada
+                      echo '<div id="imagen_mostrada"></div>';
+
+                      // JavaScript para actualizar la imagen cuando se seleccione una opción
+                      echo '<script>
+                      document.getElementById("seleccionNuevaImagen").addEventListener("change", function() {
+                        console.log(this.value);
+                        var inputElement = document.getElementById("imagen_seleccionada");
+                        inputElement.setAttribute("hidden", "true");
+                      });
+                          document.getElementById("imagen_seleccionada").addEventListener("change", function() {
+                              var selectedOption = this.options[this.selectedIndex];
+                              var inputElement = document.getElementById("imagenSelection");
+                              if(this.selectedIndex == 0)
+                              {
+                                inputElement.removeAttribute("hidden");
+                              }
+                              else
+                              {
+                                inputElement.setAttribute("hidden", "true");
+                              }
+                              var fileId = selectedOption.value;
+                              var imageUrl = fileId;
+                              document.getElementById("imagen_mostrada").innerHTML = "<br><img width=200 height=200 src=\"" + imageUrl + "\" alt=\"sin imagen\">";
+                          });
+                      </script>';
+                  } catch (Exception $e) {
+                      echo 'Error: ' . $e->getMessage();
+                  }
+                  ?>
             </div>
             <button type="submit" class="btn btn-success">Crear publicación</button>
             <a name="" id="" class="btn btn-danger" href="index.php" role="button">Cancelar</a>

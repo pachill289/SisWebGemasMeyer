@@ -1,8 +1,10 @@
 <?php include('../../plantillas/header.php');?>
   <?php
+    require('../../componentes/componentesHtml.php');
     require_once('../../data/obtenerDatos.php');
     require_once('../../models/Productos.php');
-    require('../../componentes/componentesHtml.php');
+    require_once ('../../data/googleDriveAPI.php');
+
     //API Google drive uso de composer
     require_once '../../vendor/autoload.php';
     //Es necesario actualizar la cuenta de servicio de google si esta ha caducado,la misma caduca el 31   de diciembre de 2023
@@ -44,7 +46,7 @@
           // Obtener el nombre y la ruta temporal del archivo
           $fileName = $file['name'];
           $filePath = $file['tmp_name'];
-        
+          if(!verifyFileInFolder($fileName,GOOGLE_DRIVE_FOLDER_ID,$googleDriveService)) {
           // Crear un archivo en Google Drive
           $fileMetadata = new Google_Service_Drive_DriveFile(array(
             'name' => $fileName,
@@ -60,6 +62,7 @@
           ));
           if(isset($_FILES['imagen']))
           $urlImagen = str_replace('&export=download','',$file->webContentLink);
+          }
         }
         else
         {
@@ -189,6 +192,7 @@
                 <label for="imagen" class="form-label">Escoger una imagen para la publicación (Se recomienda una imagen horizontal de 480x250 píxeles)</i>
                 <input <?php echo (isset($_GET['txtImagen']))? "" : "required"?> type="file" accept=".jpg, .png" class="form-control" name="imagen" id="imagen" placeholder="Seleccione una imagen válida de tipo .jpg o .png" aria-describedby="ImagenHelpId">
                 <div id="ImagenHelpId" class="form-text">Seleccione una imagen válida de tipo .jpg o .png y que no sea muy grande (máximo de 1024x1024 píxeles).</div>
+                
                 <!-- el estado por defecto será 1-->
             </div>
             <button type="submit" class="btn btn-success">Editar publicación</button>

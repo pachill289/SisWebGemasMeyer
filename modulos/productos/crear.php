@@ -9,7 +9,7 @@
     require_once '../../data/constantes.php';
     require_once '../../vendor/autoload.php';
     //Obtiene el servicio de google drive listo para ser usado
-    $googleDriveSerive = GetDriveService(GetDriveClient());
+    $googleDriveService = GetDriveService(GetDriveClient());
     $urlImagen = '';
     if($_POST)
     {
@@ -34,9 +34,9 @@
             $fileName = $file['name'];
             $filePath = $file['tmp_name'];
             //Verficar si el archivo seleccionado esta presente en la carpeta de google drive
-            if(!verifyFileInFolder($fileName,GOOGLE_DRIVE_FOLDER_ID,$googleDriveSerive)) {
+            if(!verifyFileInFolder($fileName,GOOGLE_DRIVE_FOLDER_ID,$googleDriveService)) {
               // Crear un archivo en Google Drive
-              $urlImagen = CreateFileInFolderGetImgUrl($fileName,GOOGLE_DRIVE_FOLDER_ID,$filePath,$googleDriveSerive);
+              $urlImagen = CreateFileInFolderGetImgUrl($fileName,GOOGLE_DRIVE_FOLDER_ID,$filePath,$googleDriveService);
               //Verificar si el producto ya existe
               foreach (construirEndpoint('Producto', 'ObtenerProductos') as $producto) {
                 if ($producto->nombre == $_POST['nombre']) {
@@ -155,7 +155,7 @@
                     try {
                       $folderId = GOOGLE_DRIVE_FOLDER_ID;
                       // Realiza una consulta para obtener la lista de archivos en la carpeta
-                      $results = $googleDriveSerive->files->listFiles([
+                      $results = $googleDriveService->files->listFiles([
                           'q' => "'$folderId' in parents and mimeType contains 'image/'",
                       ]);
                       
