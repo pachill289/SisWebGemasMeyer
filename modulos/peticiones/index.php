@@ -52,7 +52,7 @@
                 $params=array(
                 'token' => 'njcren6e408opzcy',
                 'to' => '591'.$_GET['celular'],
-                'body' => 'Enhorabuena su petición de joya con IA ha sido aprobada y estará disponible dentro de 3 a 5 días | Detalle producto: '.$_GET['producto']
+                'body' => 'Enhorabuena su petición de joya con IA ha sido aprobada y estará disponible dentro de 3 a 5 días | Detalle producto: '.$_GET['producto']." |   especificaciones: ".$_GET['txtEsp']
                 );
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
@@ -88,7 +88,7 @@
                 $params=array(
                 'token' => 'njcren6e408opzcy',
                 'to' => '591'.$_GET['celular'],
-                'body' => 'Su petición de joya con IA ha sido denegada vuelva a intentarlo | Detalle: producto: '.$_GET['producto']
+                'body' => 'Su petición de joya con IA ha sido denegada vuelva a intentarlo | Detalle: producto: '.$_GET['producto']." | especificaciones: ".$_GET['txtEsp']
                 );
                 $curl = curl_init();
                 curl_setopt_array($curl, array(

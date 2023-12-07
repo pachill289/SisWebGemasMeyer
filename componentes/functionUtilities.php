@@ -14,4 +14,9 @@
         //Devuelve una cadena: funcion(arg1,arg2,arg3...) para ser interpretada como una función javaScript
         echo "$nombreFuncion($argsString)";
     }
+
+    function recieveCantidad($cantidad)
+    {
+        echo $cantidad;
+    }
 ?>

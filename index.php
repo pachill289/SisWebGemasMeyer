@@ -746,10 +746,9 @@ if ($_POST) {
 
                             echo '<td>
                                 <form name="formCantidad" method="post">
-                                    <input name="cantidadNueva" type="number" class="form-control cantidad-input" min="1" max="' . $producto->stock . '" data-producto-id="' . $producto->idProducto . '" value="' . $producto->cantidad . '">
+                                    <input name="cantidadNueva" onchange="console.log(value)" type="number" class="form-control cantidad-input" min="1" max="' . $producto->stock . '" data-producto-id="' . $producto->idProducto . '" value="' . $producto->cantidad . '">
                                     <br/>
                                     <span class="text-danger cantidad-error">La cantidad no es válida</span>
-                                </form>
                             </td>';
 
 
@@ -757,13 +756,10 @@ if ($_POST) {
                             echo '<td class="total-producto" data-producto-id="' . $producto->idProducto . '">Bs. ' . $totalProducto . '</td>';
 
                             echo '<td>
-                                    <form method="post">
                                         <button name="btnQuitar" type="submit" class="btn btn-danger">
                                             Quitar <i class="bi bi-trash"></i>
                                         </button>
                                         <input type="hidden" name="productoId" value="' . $producto->idProducto . '">
-                                    </form>
-                                    
                                 </td>';
                             echo '</tr>';
 
@@ -781,12 +777,11 @@ if ($_POST) {
                 </div>
             </div>
             <div style="overflow-y: auto; max-height: 300px;" class="modal-footer justify-content-start">
-                <a name="" id="" class="btn btn-danger" href="borrar_carrito.php" role="button">Vaciar carrito <i class="bi bi-trash"></i></a>
-                <form method="post">
                     <button name="btnCompra" type="submit" class="btn btn-primary">
                         Realizar pedido <i class="bi bi-cart-check-fill"></i>
                     </button>
                 </form>
+                <a name="" id="" class="btn btn-danger" href="borrar_carrito.php" role="button">Vaciar carrito <i class="bi bi-trash"></i></a>
                 <form method="post" for="formCantidad">
                     
                 </form>

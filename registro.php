@@ -104,10 +104,10 @@
                   <br/>
                   <label for="nombreCompleto" class="form-label">Nombre completo:</label>
                   <input type="text"
-                    class="form-control" name="nombreCompleto" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{15,50}$"
-                    minlength="15"
+                    class="form-control" name="nombreCompleto" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{3,50}$"
+                    minlength="3"
                     maxlength="50" id="nombreCompleto" aria-describedby="helpNombre" placeholder="Ingrese su nombre" onchange="validarNombre(this.value)">
-                  <small id="helpNombre" class="form-text">El nombre debe tener mínimamente 30 caracteres, no puede exceder los 50 caracteres y solo puede utilizar letras/espacio.</small>
+                  <small id="helpNombre" class="form-text">El nombre debe tener mínimamente 3 caracteres, no puede exceder los 50 caracteres y solo puede utilizar letras/espacio.</small>
                   <br/>
                   <div class="mb-3">
                     <label for="clave" class="form-label">Contraseña:</label>

@@ -28,11 +28,11 @@ function validarCI(value) {
 }
 function validarNombre(value) {
     function verificarNombre(nombre) {
-        var regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{15,50}$/; // Expresión regular que verifica solo letras en mayúsculas y minúsculas
+        var regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{3,50}$/; // Expresión regular que verifica solo letras en mayúsculas y minúsculas
         return regex.test(nombre);
     }
     var targetElement = $("small").eq(1); // Acceder al primer elemento <small>
-    const texto = 'El nombre debe tener mínimamente 15 caracteres, no puede exceder los 50 caracteres y solo puede utilizar letras/espacio.';
+    const texto = 'El nombre debe tener mínimamente 3 caracteres, no puede exceder los 50 caracteres y solo puede utilizar letras/espacio.';
     if (verificarNombre(value)) {
       targetElement.css("color", "green");
       targetElement.text(textoCorrecto);
