@@ -131,6 +131,25 @@ foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) 
 if ($_POST) {
     if(isset($_POST['cantidadNueva']))
         echo $_POST['cantidadNueva'];
+    if (isset($_POST['btnActualizar'])) {
+        $productoId = $_POST['productoId'];
+        //Actualizar la cantidad
+        foreach ($productosCarrito->compras as $pedido) {
+            if($pedido->idProducto == $productoId)
+            {
+                if(isset($_POST['cantidadNueva']) && $_POST['cantidadNueva'] != 1)
+                {
+                    $pedido->cantidad = $_POST['cantidadNueva'];
+                    echo "La cantidad si cambió";
+                }
+                else
+                {
+                    echo "La cantidad no cambió";
+                }
+            }
+        }
+        //var_dump($productosCarrito->compras);
+    }
     if (isset($_POST['habilitadoCompra'])) {
         if ($_POST['habilitadoCompra'] == 1) {
             // Método para agregar productos al carrito
@@ -243,26 +262,6 @@ if ($_POST) {
     
         // Redirigir de nuevo al carrito o a donde desees
         alertAviso("Mensaje", "Producto eliminado", "Aceptar");
-    }
-    //filtrado
-    if (isset($_POST['precioMin']) && isset($_POST['precioMax'])) {
-        //echo "precio mínimo: ".$_POST['precioMin']."precio máximo: ".$_POST['precioMax'];
-        foreach (construirEndpoint('Producto', 'ObtenerProductosEnStock') as $producto) {
-            if ($producto->precio >= $_POST['precioMin'] && $producto->precio <= $_POST['precioMax'])
-                $productos->agregarProducto(new Producto(
-                    $producto->idProducto,
-                    $producto->nombre,
-                    $producto->precio,
-                    $producto->cantidad,
-                    $producto->estado,
-                    $producto->imagen,
-                    $producto->categoria
-            ));
-        }
-        //var_dump($productos);
-        if (count($productos->productos) == 0) {
-            alertAviso("Mensaje ⚠", "Lo sentimos no pudimos encontrar ningún producto que este en ese rango de precios, por favor vuelva a filtrar por el precio", "Aceptar");
-        }
     }
     //filtrado por categorías
     else if (isset($_POST['cat'])) {
@@ -743,10 +742,9 @@ if ($_POST) {
                             echo '<td>' . $producto->nombreProducto . '</td>';
                             echo '<td class="precio-producto" data-producto-id="' . $producto->idProducto . '">Bs. ' . $producto->precio . '</td>';
                             echo '<td>' . $producto->stock . '</td>';
-
                             echo '<td>
                                 <form name="formCantidad" method="post">
-                                    <input name="cantidadNueva" onchange="console.log(value)" type="number" class="form-control cantidad-input" min="1" max="' . $producto->stock . '" data-producto-id="' . $producto->idProducto . '" value="' . $producto->cantidad . '">
+                                    <input name="cantidadNueva" required onchange="actualizarCantidad(this)" type="number" class="form-control cantidad-input" min="1" max="' . $producto->stock . '" data-producto-id="' . $producto->idProducto . '" value="' .$producto->cantidad. '">
                                     <br/>
                                     <span class="text-danger cantidad-error">La cantidad no es válida</span>
                             </td>';
@@ -780,6 +778,9 @@ if ($_POST) {
                     <button name="btnCompra" type="submit" class="btn btn-primary">
                         Realizar pedido <i class="bi bi-cart-check-fill"></i>
                     </button>
+                    <button name="btnActualizar" type="submit" class="btn btn-success">
+                        Guardar cambios <i class="bi bi-cart-check-fill"></i>
+                    </button>
                 </form>
                 <a name="" id="" class="btn btn-danger" href="borrar_carrito.php" role="button">Vaciar carrito <i class="bi bi-trash"></i></a>
                 <form method="post" for="formCantidad">
@@ -792,6 +793,9 @@ if ($_POST) {
 
 
 <script>
+    function actualizarCantidad(input) {
+        document.getElementById('formCantidad').submit();
+    }
     // Actualizar totales y validar cantidad cuando se cambia la cantidad
     $('.cantidad-input').on('input', function() {
         const cantidadInput = $(this);

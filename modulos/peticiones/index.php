@@ -197,16 +197,6 @@
 <?php if(isset($_COOKIE['usuario']))
     { $usuarioSesion = json_decode($_COOKIE['usuario']); if($usuarioSesion->tipo == 1) {?>
 <h4>Listado de todas las peticiones</h4>
-    <!-- Filtrar peticiones -->
-    <form style="margin:10px;" method="post">
-        <div class="mb-3">
-            <select class="form-select form-select-lg" name="tipoPublicacion">
-                <option value="1" selected>Mostrar peticiones recientes</option>
-                <option value="2" >Mostrar peticiones antiguas</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Listar</button>
-    </form>
     <div class="card">
         <div class="card-body">
             <div class="table-responsive-sm">
